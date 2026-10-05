@@ -153,7 +153,7 @@ d'art contemporain plutôt qu'un template SaaS.
 - **Palette** : `#0A0A0A` (encre), `#FAFAF8` (papier), gris `#E8E8E5`, `#8A8A86`,
   `#2A2A2A`. Aucune couleur d'accent : le contraste vient de l'**inversion**
   noir/blanc (sections sombres, survols qui inversent les lignes).
-- **Typographie** : *Inter Tight* (grotesque serrée, titres géants en capitales,
+- **Typographie** : *Inter* (police principale, graisses 400/500/600/700 ; titres géants en capitales,
   graisse 600–800) + *Instrument Serif* italique pour les accents éditoriaux
   (« digital *avec intention* ») + *JetBrains Mono* pour les méta-données
   (index `01/`, dates, coordonnées `12.37°N — 1.52°W`).
