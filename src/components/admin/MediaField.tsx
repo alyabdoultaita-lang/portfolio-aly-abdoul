@@ -1,14 +1,20 @@
 "use client";
 
 import { useId, useState } from "react";
+import { resizeImage } from "@/lib/client/resize-image";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 import { slugify } from "@/lib/utils";
 import { useFieldError } from "./ActionForm";
 
 const MAX_SIZE = 10 * 1024 * 1024;
 
-/** Envoie un fichier dans le bucket « media » et renvoie son URL publique. */
-export async function uploadMedia(file: File, folder: string) {
+/**
+ * Envoie un fichier dans le bucket « media » et renvoie son URL publique.
+ * Les photos sont d'abord redimensionnées (2000 px max, WebP) : envoi plus
+ * rapide et pages plus légères, même depuis un téléphone.
+ */
+export async function uploadMedia(original: File, folder: string) {
+  const file = await resizeImage(original);
   if (file.size > MAX_SIZE) throw new Error("Fichier trop volumineux (10 Mo maximum).");
   const supabase = createSupabaseBrowserClient();
   const ext = file.name.split(".").pop()?.toLowerCase() ?? "bin";
@@ -65,7 +71,7 @@ export function MediaField({
           <div className="relative aspect-[16/9] w-full overflow-hidden border border-line bg-mist">
             {url ? (
               // eslint-disable-next-line @next/next/no-img-element -- aperçu admin d'une URL arbitraire
-              <img src={url} alt="" className="size-full object-cover grayscale" />
+              <img src={url} alt="" className="size-full object-cover" />
             ) : (
               <span className="eyebrow absolute inset-0 flex items-center justify-center text-stone">Aucune image</span>
             )}
@@ -86,7 +92,7 @@ export function MediaField({
               htmlFor={inputId}
               className="inline-flex min-h-10 cursor-pointer items-center border border-ink px-3 text-sm hover:bg-ink hover:text-paper"
             >
-              {busy ? "Envoi…" : "Choisir un fichier"}
+              {busy ? "Optimisation et envoi…" : "Choisir un fichier"}
             </label>
             <input id={inputId} type="file" accept={accept} className="sr-only" onChange={(e) => onFile(e.target.files?.[0])} />
             {url && (

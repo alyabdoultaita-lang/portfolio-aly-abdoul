@@ -159,8 +159,9 @@ d'art contemporain plutôt qu'un template SaaS.
   (index `01/`, dates, coordonnées `12.37°N — 1.52°W`).
 - **Grille** : 12 colonnes, filets fins (1px) comme dans la presse, numérotation
   des sections, beaucoup de blanc.
-- **Images** : en niveaux de gris, qui reprennent légèrement de contraste et
-  zooment au survol.
+- **Images** : en couleurs légèrement adoucies (saturation 80 %, réglable via
+  `--img-saturation` dans `globals.css`) pour rester cohérentes avec la charte
+  noir/blanc ; elles passent en pleine couleur et zooment au survol.
 - **Mouvement** : apparition par masque des lignes de titre, révélation au
   scroll (IntersectionObserver + CSS, ~1 ko de JS), bandeau défilant de
   compétences, compteurs animés, lignes inversées au survol. Tout est

@@ -97,7 +97,7 @@ export default async function ArticlePage({ params }: PageProps<"/blog/[slug]">)
         {article.cover_url && (
           <figure className="container-x mt-12">
             <div className="unveil relative aspect-[16/9] overflow-hidden bg-mist" style={delay(250)}>
-              <SmartImage src={article.cover_url} alt={article.cover_alt ?? ""} fill priority sizes="100vw" className="object-cover grayscale" />
+              <SmartImage src={article.cover_url} alt={article.cover_alt ?? ""} fill priority sizes="100vw" className="img-tone object-cover" />
             </div>
             {article.cover_alt && <figcaption className="eyebrow mt-3 text-stone">{article.cover_alt}</figcaption>}
           </figure>

@@ -183,16 +183,21 @@
   transform: none;
 }
 
-/* Images monochromes qui reprennent du contraste au survol */
-.img-mono {
-  filter: grayscale(1) contrast(1.05);
+/* Images en couleurs adoucies (cohérentes avec la charte noir / blanc),
+   qui passent en pleine couleur au survol. Ajuster --img-saturation pour
+   des images plus ou moins colorées (1 = couleurs d'origine). */
+:root {
+  --img-saturation: 0.8;
+}
+.img-tone {
+  filter: saturate(var(--img-saturation)) contrast(1.02);
   transition:
     filter 0.8s var(--ease-out-expo),
     transform 1.2s var(--ease-out-expo);
 }
-.group:hover .img-mono,
-.group:focus-visible .img-mono {
-  filter: grayscale(1) contrast(1.2);
+.group:hover .img-tone,
+.group:focus-visible .img-tone {
+  filter: saturate(1) contrast(1.04);
   transform: scale(1.04);
 }
 
@@ -297,7 +302,6 @@
 .prose-editorial img {
   width: 100%;
   height: auto;
-  filter: grayscale(1);
 }
 .prose-editorial code {
   font-family: var(--font-mono);
