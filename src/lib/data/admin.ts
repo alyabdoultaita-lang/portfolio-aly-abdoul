@@ -10,6 +10,7 @@ import type {
   Project,
   ProjectCategory,
   Skill,
+  SkillCategory,
   Tag,
 } from "@/types/content";
 
@@ -122,8 +123,14 @@ export async function getExperience(id: string) {
 
 export async function listSkills() {
   const supabase = await db();
-  const { data } = await supabase.from("skills").select("*").order("category").order("sort_order");
+  const { data } = await supabase.from("skills").select("*").order("sort_order");
   return (data ?? []) as Skill[];
+}
+
+export async function listSkillCategories() {
+  const supabase = await db();
+  const { data } = await supabase.from("skill_categories").select("*").order("sort_order");
+  return (data ?? []) as SkillCategory[];
 }
 
 export async function listCertifications() {

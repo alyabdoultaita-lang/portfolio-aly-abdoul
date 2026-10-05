@@ -12,6 +12,7 @@ import {
   cvProjectCategories,
   cvProjects,
   cvSettings,
+  cvSkillCategories,
   cvSkills,
 } from "../src/content/cv.ts";
 
@@ -64,7 +65,7 @@ const projectColumns = Object.keys(projects[0]).filter((k) => k !== "category_sl
 const out = `-- ============================================================================
 -- Contenu de départ issu du CV — GÉNÉRÉ par scripts/generate-seed.ts
 -- Ne pas modifier à la main : éditez src/content/cv.ts puis npm run seed:generate
--- À exécuter APRÈS supabase/migrations/0001_schema.sql.
+-- À exécuter APRÈS supabase/migrations/0001_schema.sql et 0002_skill_domains.sql.
 -- Chaque table n'est remplie que si elle est vide (ré-exécution sans doublon).
 -- ============================================================================
 
@@ -77,8 +78,24 @@ on conflict (key) do nothing;
 
 -- Expériences
 ${insertIfEmpty("experiences", cvExperiences.map((e) => pick(e, ["company", "role", "location", "employment_type", "start_date", "end_date", "is_current", "description", "responsibilities", "achievements", "results", "tools", "company_url", "logo_url", "sort_order", "is_visible"])))}
--- Compétences (niveaux non renseignés : absents du CV)
-${insertIfEmpty("skills", cvSkills.map((s) => pick(s, ["name", "category", "level", "description", "sort_order", "is_featured"])))}
+-- Domaines de compétences (également créés par la migration 0002)
+insert into public.skill_categories (name, slug, description, icon, sort_order) values
+${cvSkillCategories.map((c) => `  (${sql(c.name)}, ${sql(c.slug)}, ${sql(c.description)}, ${sql(c.icon)}, ${c.sort_order})`).join(",\n")}
+on conflict (slug) do nothing;
+
+-- Compétences, rattachées à leur domaine (si la table est vide)
+do $seed$ begin
+  if not exists (select 1 from public.skills) then
+    insert into public.skills (name, category_id, sort_order, is_featured) values
+${cvSkills
+  .map((s) => {
+    const slug = cvSkillCategories.find((c) => c.id === s.category_id)?.slug ?? "";
+    return `      (${sql(s.name)}, (select id from public.skill_categories where slug = ${sql(slug)}), ${s.sort_order}, ${sql(s.is_featured)})`;
+  })
+  .join(",\n")};
+  end if;
+end $seed$;
+
 -- Formations et certifications
 ${insertIfEmpty("certifications", cvCertifications.map((c) => pick(c, ["kind", "name", "issuer", "issue_date", "expiry_date", "credential_id", "credential_url", "sort_order"])))}
 -- Catégories de projets

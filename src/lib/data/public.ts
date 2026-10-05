@@ -8,6 +8,7 @@ import {
   cvProjectCategories,
   cvProjects,
   cvSettings,
+  cvSkillCategories,
   cvSkills,
 } from "@/content/cv";
 import { demoArticles, demoCategories, demoTags } from "@/content/demo";
@@ -23,6 +24,7 @@ import type {
   ProjectCategory,
   SiteSettings,
   Skill,
+  SkillCategory,
   Tag,
 } from "@/types/content";
 
@@ -131,6 +133,14 @@ export const getSkills = cache(async (): Promise<Skill[]> => {
   const { data, error } = await db.from("skills").select("*").order("sort_order");
   if (error) logError("skills", error);
   return (data as Skill[]) ?? [];
+});
+
+export const getSkillCategories = cache(async (): Promise<SkillCategory[]> => {
+  const db = getPublicClient();
+  if (!db) return cvSkillCategories;
+  const { data, error } = await db.from("skill_categories").select("*").order("sort_order");
+  if (error) logError("skill_categories", error);
+  return (data as SkillCategory[]) ?? [];
 });
 
 export const getCertifications = cache(async (): Promise<Certification[]> => {
