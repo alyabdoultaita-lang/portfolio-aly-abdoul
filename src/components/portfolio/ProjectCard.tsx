@@ -25,7 +25,7 @@ export function ProjectCard({ project, index, priority, className, aspect = "asp
               fill
               priority={priority}
               sizes="(min-width: 1024px) 50vw, 100vw"
-              className="img-mono object-cover"
+              className="img-tone object-cover"
             />
           )}
           <div className="absolute inset-0 bg-ink/0 transition-colors duration-700 group-hover:bg-ink/55" />

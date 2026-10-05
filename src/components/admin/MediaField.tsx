@@ -65,7 +65,7 @@ export function MediaField({
           <div className="relative aspect-[16/9] w-full overflow-hidden border border-line bg-mist">
             {url ? (
               // eslint-disable-next-line @next/next/no-img-element -- aperçu admin d'une URL arbitraire
-              <img src={url} alt="" className="size-full object-cover grayscale" />
+              <img src={url} alt="" className="size-full object-cover" />
             ) : (
               <span className="eyebrow absolute inset-0 flex items-center justify-center text-stone">Aucune image</span>
             )}

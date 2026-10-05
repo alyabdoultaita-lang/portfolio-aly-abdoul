@@ -15,7 +15,7 @@ export function ArticleCard({ article, priority }: { article: Article; priority?
               fill
               priority={priority}
               sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-              className="img-mono object-cover"
+              className="img-tone object-cover"
             />
           )}
         </div>

@@ -65,7 +65,7 @@ export default async function AboutPage() {
                   fill
                   priority
                   sizes="(min-width: 1024px) 40vw, 100vw"
-                  className="img-mono object-cover"
+                  className="img-tone object-cover"
                 />
               )}
             </div>

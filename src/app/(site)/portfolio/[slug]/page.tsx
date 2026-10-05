@@ -118,7 +118,7 @@ export default async function ProjectPage({ params }: PageProps<"/portfolio/[slu
       {project.cover_url && (
         <div className="container-x mt-12">
           <div className="unveil relative aspect-[16/10] overflow-hidden bg-mist sm:aspect-[16/8]" style={delay(300)}>
-            <SmartImage src={project.cover_url} alt={project.cover_alt ?? project.title} fill priority sizes="100vw" className="object-cover grayscale" />
+            <SmartImage src={project.cover_url} alt={project.cover_alt ?? project.title} fill priority sizes="100vw" className="img-tone object-cover" />
           </div>
         </div>
       )}
@@ -149,7 +149,7 @@ export default async function ProjectPage({ params }: PageProps<"/portfolio/[slu
           <div className="mt-16 grid gap-6 md:grid-cols-2">
             {project.gallery.map((src, i) => (
               <div key={src} className="group relative aspect-[4/3] overflow-hidden bg-mist" data-reveal>
-                <SmartImage src={src} alt={`${project.title} — visuel ${i + 1}`} fill sizes="(min-width: 768px) 50vw, 100vw" className="img-mono object-cover" />
+                <SmartImage src={src} alt={`${project.title} — visuel ${i + 1}`} fill sizes="(min-width: 768px) 50vw, 100vw" className="img-tone object-cover" />
               </div>
             ))}
           </div>

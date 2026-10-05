@@ -20,7 +20,7 @@ export default async function ProjectsAdminPage() {
               {projects.map((p) => (
                 <li key={p.id}>
                   <Link href={`/admin/projets/${p.id}`} className="flex items-center gap-4 p-4 hover:bg-mist">
-                    <span className="size-14 shrink-0 bg-mist bg-cover bg-center grayscale" style={p.cover_url ? { backgroundImage: `url("${p.cover_url}")` } : undefined} />
+                    <span className="size-14 shrink-0 bg-mist bg-cover bg-center" style={p.cover_url ? { backgroundImage: `url("${p.cover_url}")` } : undefined} />
                     <span className="min-w-0 flex-1">
                       <span className="block truncate font-medium">{p.title}</span>
                       <span className="text-sm text-stone">
