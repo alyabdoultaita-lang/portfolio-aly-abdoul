@@ -1,12 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import { Instrument_Serif, Inter_Tight, JetBrains_Mono } from "next/font/google";
+import { Instrument_Serif, Inter, JetBrains_Mono } from "next/font/google";
 import { siteConfig } from "@/config/site";
 import { getSettings } from "@/lib/data/public";
 import "./globals.css";
 
-const sans = Inter_Tight({
+/**
+ * Police principale : Inter, auto-hébergée par next/font (aucune requête vers
+ * Google côté visiteur, pas de décalage de mise en page).
+ * 400 texte · 500 navigation et éléments secondaires · 600 boutons et sous-titres · 700 grands titres.
+ */
+const sans = Inter({
   subsets: ["latin"],
-  variable: "--font-inter-tight",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-inter",
   display: "swap",
 });
 

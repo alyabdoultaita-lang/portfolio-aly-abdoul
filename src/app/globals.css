@@ -14,9 +14,12 @@
   --color-mist: #ededea;
   --color-paper: #fafaf8;
 
-  --font-sans: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-instrument-serif), ui-serif, Georgia, serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+
+  /* Breakpoint du menu : horizontal à partir de 56rem (896 px), burger en dessous */
+  --breakpoint-nav: 56rem;
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
@@ -72,7 +75,7 @@
   font-size: clamp(2.6rem, 8vw, 7.5rem);
   line-height: 0.9;
   letter-spacing: -0.045em;
-  font-weight: 650;
+  font-weight: 700;
 }
 
 @utility display-md {

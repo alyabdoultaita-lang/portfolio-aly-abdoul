@@ -13,7 +13,7 @@ const variants: Record<Variant, string> = {
 };
 
 const base =
-  "group/btn inline-flex min-h-12 items-center justify-center gap-3 border px-6 text-sm font-medium tracking-tight transition-colors duration-500 ease-out-expo disabled:pointer-events-none disabled:opacity-50";
+  "group/btn inline-flex min-h-12 items-center justify-center gap-3 border px-6 text-sm font-semibold tracking-tight transition-colors duration-500 ease-out-expo disabled:pointer-events-none disabled:opacity-50";
 
 interface ButtonLinkProps extends Omit<ComponentProps<typeof Link>, "className"> {
   variant?: Variant;
