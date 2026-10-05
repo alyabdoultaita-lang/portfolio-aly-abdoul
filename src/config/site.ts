@@ -5,7 +5,8 @@
 
 export const siteConfig = {
   name: "Abdoul Aly TAITA",
-  shortName: "A.A.T",
+  /** Texte du logo dans le header. */
+  shortName: "Mon espace",
   url: (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/$/, ""),
   locale: "fr_FR",
   /** Coordonnées affichées dans le hero (Ouagadougou). */
