@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1500" width="1200" height="1500">
+<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2e2e2c"/><stop offset="1" stop-color="#0a0a0a"/></linearGradient>
+<radialGradient id="l" cx=".7" cy=".2" r=".9"><stop offset="0" stop-color="#6b6b67" stop-opacity=".55"/><stop offset="1" stop-color="#0a0a0a" stop-opacity="0"/></radialGradient></defs>
+<rect width="1200" height="1500" fill="url(#g)"/><rect width="1200" height="1500" fill="url(#l)"/>
+<g fill="#1c1c1b"><circle cx="600" cy="560" r="230"/><path d="M180 1500c0-330 190-560 420-560s420 230 420 560z"/></g>
+<g fill="none" stroke="#6b6b67" stroke-width="1.5" opacity=".6"><circle cx="600" cy="560" r="230"/><path d="M180 1500c0-330 190-560 420-560s420 230 420 560"/></g>
+<text x="600" y="1080" text-anchor="middle" font-family="monospace" font-size="28" letter-spacing="8" fill="#a3a39e">VOTRE PHOTO ICI</text>
+<text x="40" y="1460" font-family="monospace" font-size="22" letter-spacing="4" fill="#fafaf8" opacity=".7">DÉMO — /admin > Profil</text>
+</svg>
