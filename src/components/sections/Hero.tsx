@@ -92,7 +92,7 @@ export function Hero({ profile, settings }: { profile: Profile; settings: SiteSe
                   fill
                   priority
                   sizes="(min-width: 1024px) 33vw, 100vw"
-                  className="img-tone object-cover"
+                  className="img-tone object-cover object-[50%_25%]"
                 />
               )}
               <span className="eyebrow absolute left-3 top-3 bg-paper px-2 py-1 text-ink">Portrait</span>

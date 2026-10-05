@@ -117,8 +117,8 @@ export default async function ProjectPage({ params }: PageProps<"/portfolio/[slu
 
       {project.cover_url && (
         <div className="container-x mt-12">
-          <div className="unveil relative aspect-[16/10] overflow-hidden bg-mist sm:aspect-[16/8]" style={delay(300)}>
-            <SmartImage src={project.cover_url} alt={project.cover_alt ?? project.title} fill priority sizes="100vw" className="img-tone object-cover" />
+          <div className="unveil relative aspect-[16/10] overflow-hidden bg-mist" style={delay(300)}>
+            <SmartImage src={project.cover_url} alt={project.cover_alt ?? project.title} fill priority sizes="100vw" className="img-tone object-cover object-top" />
           </div>
         </div>
       )}
