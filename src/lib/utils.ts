@@ -47,6 +47,10 @@ export function formatDate(value: string | null | undefined) {
   return dateFormatter.format(new Date(value));
 }
 
+export function formatYear(value: string | null | undefined) {
+  return value ? String(new Date(value).getUTCFullYear()) : "";
+}
+
 export function formatMonth(value: string | null | undefined) {
   if (!value) return "";
   return monthFormatter.format(new Date(value)).replace(".", "");

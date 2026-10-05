@@ -77,13 +77,14 @@ export const experienceSchema = z
 export const skillSchema = z.object({
   name: z.string().min(1, "Nom requis.").max(120),
   category: z.string().min(1, "Catégorie requise.").max(80),
-  level: z.number().int().min(0).max(100),
+  level: z.number().int().min(0).max(100).nullable(),
   description: z.string().max(300).nullable(),
   sort_order: z.number().int(),
   is_featured: z.boolean(),
 });
 
 export const certificationSchema = z.object({
+  kind: z.enum(["certification", "formation"]),
   name: z.string().min(2, "Intitulé requis.").max(200),
   issuer: z.string().min(1, "Organisme requis.").max(160),
   issue_date: z.iso.date().nullable(),

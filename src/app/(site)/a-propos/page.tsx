@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { CallToAction } from "@/components/sections/HomeSections";
+import { CredentialList } from "@/components/shared/CredentialList";
 import { PageHero } from "@/components/shared/PageHero";
 import { ButtonLink } from "@/components/ui/Button";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { SmartImage } from "@/components/ui/SmartImage";
 import { getCertifications, getProfile, getSettings } from "@/lib/data/public";
 import { breadcrumbJsonLd, pageMetadata, personJsonLd } from "@/lib/seo";
-import { delay, formatMonth, paragraphs } from "@/lib/utils";
+import { delay, paragraphs } from "@/lib/utils";
 
 export const revalidate = 60;
 
@@ -98,32 +99,19 @@ export default async function AboutPage() {
               </ButtonLink>
             </div>
 
-            {certifications.length > 0 && (
-              <section className="mt-20" aria-labelledby="certifs">
-                <h2 id="certifs" className="eyebrow border-t border-ink pt-4 text-stone">
-                  Certifications
-                </h2>
-                <ul className="mt-4">
-                  {certifications.map((c) => (
-                    <li key={c.id} className="flex flex-wrap items-baseline justify-between gap-2 border-b border-line py-5" data-reveal>
-                      <div>
-                        <p className="text-lg font-medium tracking-tight">
-                          {c.credential_url ? (
-                            <a href={c.credential_url} target="_blank" rel="noopener noreferrer" className="link-underline">
-                              {c.name}
-                            </a>
-                          ) : (
-                            c.name
-                          )}
-                        </p>
-                        <p className="text-stone">{c.issuer}</p>
-                      </div>
-                      {c.issue_date && <span className="eyebrow text-stone">{formatMonth(c.issue_date)}</span>}
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            )}
+            {[
+              { id: "formations", title: "Formation", items: certifications.filter((c) => c.kind === "formation") },
+              { id: "certifs", title: "Certifications", items: certifications.filter((c) => c.kind !== "formation") },
+            ]
+              .filter((group) => group.items.length > 0)
+              .map((group) => (
+                <section key={group.id} className="mt-20" aria-labelledby={group.id}>
+                  <h2 id={group.id} className="eyebrow border-t border-ink pt-4 text-stone">
+                    {group.title}
+                  </h2>
+                  <CredentialList items={group.items} />
+                </section>
+              ))}
           </div>
         </div>
       </section>

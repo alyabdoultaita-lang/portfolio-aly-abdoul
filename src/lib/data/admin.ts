@@ -128,7 +128,7 @@ export async function listSkills() {
 
 export async function listCertifications() {
   const supabase = await db();
-  const { data } = await supabase.from("certifications").select("*").order("sort_order");
+  const { data } = await supabase.from("certifications").select("*").order("kind", { ascending: false }).order("sort_order");
   return (data ?? []) as Certification[];
 }
 

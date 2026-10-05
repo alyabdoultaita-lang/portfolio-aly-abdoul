@@ -12,7 +12,7 @@ const items = [
   { href: "/admin/projets", label: "Projets" },
   { href: "/admin/experiences", label: "Expériences" },
   { href: "/admin/competences", label: "Compétences" },
-  { href: "/admin/certifications", label: "Certifications" },
+  { href: "/admin/certifications", label: "Formations & certifs" },
   { href: "/admin/profil", label: "Profil" },
   { href: "/admin/messages", label: "Messages" },
   { href: "/admin/parametres", label: "Paramètres" },

@@ -74,7 +74,8 @@ export interface Skill {
   id: string;
   name: string;
   category: string;
-  level: number;
+  /** 0–100, ou null pour ne pas afficher de niveau. */
+  level: number | null;
   description: string | null;
   sort_order: number;
   is_featured: boolean;
@@ -146,8 +147,11 @@ export interface Article {
   updated_at?: string;
 }
 
+export type CertificationKind = "certification" | "formation";
+
 export interface Certification {
   id: string;
+  kind: CertificationKind;
   name: string;
   issuer: string;
   issue_date: string | null;

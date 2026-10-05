@@ -39,7 +39,7 @@ export default async function SkillsPage() {
       <section className="bg-ink pb-24 text-paper sm:pb-36" aria-label="Compétences par domaine">
         <div className="container-x pt-16">
           <SkillGroups skills={skills} dark />
-          <p className="eyebrow mt-8 text-smoke">Niveaux indicatifs, auto-évalués.</p>
+          {skills.some((s) => s.level !== null) && <p className="eyebrow mt-8 text-smoke">Niveaux indicatifs, auto-évalués.</p>}
         </div>
       </section>
     </>

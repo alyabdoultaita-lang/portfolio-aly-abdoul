@@ -15,7 +15,7 @@ retenue. Il sert de référence pour faire évoluer le site.
 | Publication programmée | Colonne `published_at` + politique RLS « visible si `published_at <= now()` » + revalidation périodique |
 | Sécurité de l'admin | Supabase Auth (session en cookies, jeton revalidé côté serveur), `proxy.ts` + vérification serveur + Row Level Security en base |
 | Déploiement Vercel | Next.js App Router, aucune dépendance serveur spécifique |
-| Pas de données fictives définitives | Données de démonstration isolées dans `src/content/demo.ts`, utilisées **uniquement** quand Supabase n'est pas configuré, et signalées par un bandeau |
+| Pas de données fictives définitives | Contenu réel du CV dans `src/content/cv.ts` (source du site local et du seed SQL) ; seuls les articles d'exemple de `src/content/demo.ts` sont fictifs, utilisés sans Supabase et signalés par un bandeau |
 
 ## 2. Architecture technique
 
@@ -45,10 +45,11 @@ retenue. Il sert de référence pour faire évoluer le site.
 3. Les politiques **RLS** PostgreSQL n'autorisent l'écriture qu'aux administrateurs,
    même si quelqu'un appelait directement l'API Supabase.
 
-**Mode démonstration** : si `NEXT_PUBLIC_SUPABASE_URL` n'est pas défini, la couche
-`src/lib/data` renvoie le contenu de `src/content/demo.ts`. Le site est donc
+**Mode local** : si `NEXT_PUBLIC_SUPABASE_URL` n'est pas défini, la couche
+`src/lib/data` renvoie le contenu du CV (`src/content/cv.ts`) et des articles
+d'exemple (`src/content/demo.ts`). Le site est donc
 consultable immédiatement après un `npm run dev`, et un bandeau discret indique
-que les contenus sont des exemples.
+que les articles du blog sont des exemples.
 
 ## 3. Structure des dossiers
 
@@ -57,7 +58,7 @@ que les contenus sont des exemples.
 ├── docs/ARCHITECTURE.md          ← ce document
 ├── supabase/
 │   ├── migrations/0001_schema.sql   tables, index, triggers, RLS, storage
-│   └── seed.sql                     données de démonstration (facultatif)
+│   └── seed.sql                     contenu du CV (généré : npm run seed:generate)
 ├── public/demo/                  visuels de démonstration (SVG monochromes)
 └── src/
     ├── proxy.ts                  protection /admin + rafraîchissement session
@@ -87,7 +88,8 @@ que les contenus sont des exemples.
     │   ├── sections/             blocs de la page d'accueil
     │   ├── blog/ portfolio/ experience/ skills/
     │   └── admin/                formulaires, champs, éditeur riche, tableaux
-    ├── content/demo.ts           données de démonstration (à remplacer)
+    ├── content/cv.ts             contenu réel issu du CV
+    ├── content/demo.ts           articles de blog d'exemple
     ├── config/site.ts            nom, URL, navigation, réseaux
     ├── lib/
     │   ├── supabase/             clients public / serveur / navigateur
@@ -113,7 +115,7 @@ experiences(id, company, role, location, start_date, end_date, is_current,
             description, responsibilities text[], achievements text[],
             results text[], tools text[], company_url, logo_url, sort_order)
 
-skills(id, name, category, level 0-100, description, icon, sort_order, is_featured)
+skills(id, name, category, level 0-100 ou null, description, sort_order, is_featured)
 
 project_categories(id, name, slug UNIQUE, sort_order)
 projects(id, title, slug UNIQUE, category_id → project_categories,
@@ -129,7 +131,7 @@ articles(id, title, subtitle, slug UNIQUE, excerpt, content (HTML),
          meta_title, meta_description, created_at, updated_at)
 article_tags(article_id → articles, tag_id → tags)  PK composite
 
-certifications(id, name, issuer, issue_date, expiry_date,
+certifications(id, kind formation|certification, name, issuer, issue_date, expiry_date,
                credential_id, credential_url, sort_order)
 
 messages(id, name, email, subject, message, is_read, created_at)
@@ -191,4 +193,4 @@ Volontairement **absents** : bibliothèque d'animation (CSS suffit), UI kit
   serveur, protection CSRF native.
 - **HTML stocké + nettoyé** pour les articles → rendu rapide, compatible avec
   l'éditeur riche, sûr.
-- **Mode démo** → le site fonctionne avant même d'avoir créé le projet Supabase.
+- **Mode local** → le site fonctionne avec le contenu du CV avant même d'avoir créé le projet Supabase.

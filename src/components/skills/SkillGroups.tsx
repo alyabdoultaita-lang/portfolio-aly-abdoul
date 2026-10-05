@@ -55,11 +55,11 @@ export function SkillGroups({ skills, dark, showLevels = true }: { skills: Skill
               <li key={skill.id}>
                 <div className="flex items-baseline justify-between gap-4 text-[0.95rem]">
                   <span>{skill.name}</span>
-                  {showLevels && (
+                  {showLevels && skill.level !== null && (
                     <span className={cn("font-mono text-xs", dark ? "text-smoke" : "text-stone")}>{skill.level}%</span>
                   )}
                 </div>
-                {showLevels && <LevelBar level={skill.level} dark={dark} />}
+                {showLevels && skill.level !== null && <LevelBar level={skill.level} dark={dark} />}
                 {skill.description && (
                   <p className={cn("mt-2 text-sm", dark ? "text-smoke" : "text-stone")}>{skill.description}</p>
                 )}

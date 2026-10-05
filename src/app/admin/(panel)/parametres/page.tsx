@@ -2,7 +2,7 @@ import { deleteTerm, saveSettings, saveTerm } from "@/app/admin/actions/settings
 import { AdminPageHeader } from "@/components/admin/PageHeader";
 import { SettingsForm } from "@/components/admin/SettingsForm";
 import { TermManager } from "@/components/admin/TermManager";
-import { demoSettings } from "@/content/demo";
+import { cvSettings } from "@/content/cv";
 import { getAdminSettings, listCategories, listTags } from "@/lib/data/admin";
 import type { SiteSettings } from "@/types/content";
 
@@ -10,12 +10,12 @@ export const metadata = { title: "Paramètres" };
 
 export default async function SettingsAdminPage() {
   const [stored, categories, tags] = await Promise.all([getAdminSettings(), listCategories(), listTags()]);
-  // Valeurs par défaut = textes de démonstration, à personnaliser.
+  // Valeurs par défaut = textes issus du CV, à personnaliser.
   const settings: SiteSettings = {
     stats: (stored.stats as SiteSettings["stats"]) ?? [],
-    hero: { ...demoSettings.hero, ...(stored.hero as object) },
-    contact_cta: { ...demoSettings.contact_cta, ...(stored.contact_cta as object) },
-    seo: { ...demoSettings.seo, ...(stored.seo as object) },
+    hero: { ...cvSettings.hero, ...(stored.hero as object) },
+    contact_cta: { ...cvSettings.contact_cta, ...(stored.contact_cta as object) },
+    seo: { ...cvSettings.seo, ...(stored.seo as object) },
   };
 
   return (

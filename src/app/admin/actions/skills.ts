@@ -11,7 +11,8 @@ export async function saveSkill(id: string | null, _prev: FormState, fd: FormDat
   const parsed = skillSchema.safeParse({
     name: form.str(fd, "name"),
     category: form.str(fd, "new_category") || form.str(fd, "category"),
-    level: form.int(fd, "level", 70),
+    // Niveau facultatif : null = non affiché sur le site.
+    level: form.bool(fd, "has_level") ? form.int(fd, "level", 70) : null,
     description: form.opt(fd, "description"),
     sort_order: form.int(fd, "sort_order"),
     is_featured: form.bool(fd, "is_featured"),

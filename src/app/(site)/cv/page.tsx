@@ -1,13 +1,14 @@
 import type { ReactNode } from "react";
 import type { Metadata } from "next";
 import { groupSkills } from "@/components/skills/SkillGroups";
+import { CredentialList } from "@/components/shared/CredentialList";
 import { PrintButton } from "@/components/shared/PrintButton";
 import { ButtonLink } from "@/components/ui/Button";
 import { DownloadIcon } from "@/components/ui/Icons";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { getCertifications, getExperiences, getProfile, getSkills } from "@/lib/data/public";
 import { breadcrumbJsonLd, pageMetadata, personJsonLd } from "@/lib/seo";
-import { formatMonth, formatPeriod } from "@/lib/utils";
+import { formatPeriod } from "@/lib/utils";
 
 export const revalidate = 60;
 
@@ -33,6 +34,9 @@ export default async function CvPage() {
     getSkills(),
     getCertifications(),
   ]);
+
+  const formations = certifications.filter((c) => c.kind === "formation");
+  const certificationsOnly = certifications.filter((c) => c.kind !== "formation");
 
   return (
     <>
@@ -98,9 +102,9 @@ export default async function CvPage() {
                     <span className="eyebrow text-stone">{formatPeriod(exp.start_date, exp.end_date, exp.is_current)}</span>
                   </div>
                   {exp.description && <p className="mt-2 text-graphite">{exp.description}</p>}
-                  {[...exp.achievements, ...exp.results].length > 0 && (
+                  {[...exp.responsibilities, ...exp.achievements, ...exp.results].length > 0 && (
                     <ul className="mt-3 list-[square] space-y-1 pl-5 text-graphite">
-                      {[...exp.achievements, ...exp.results].map((a, i) => (
+                      {[...exp.responsibilities, ...exp.achievements, ...exp.results].map((a, i) => (
                         <li key={i}>{a}</li>
                       ))}
                     </ul>
@@ -113,27 +117,28 @@ export default async function CvPage() {
 
           <CvSection title="Compétences">
             <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-2">
-              {groupSkills(skills).map(([category, items]) => (
-                <div key={category}>
-                  <dt className="font-semibold">{category}</dt>
-                  <dd className="text-graphite">{items.map((s) => s.name).join(", ")}</dd>
-                </div>
-              ))}
+              {groupSkills(skills).map(([category, items]) => {
+                // Évite « Google Ads — Google Ads » quand la compétence porte le nom de sa catégorie.
+                const names = items.map((s) => s.name).filter((n) => n.toLowerCase() !== category.toLowerCase());
+                return (
+                  <div key={category}>
+                    <dt className="font-semibold">{category}</dt>
+                    {names.length > 0 && <dd className="text-graphite">{names.join(", ")}</dd>}
+                  </div>
+                );
+              })}
             </dl>
           </CvSection>
 
-          {certifications.length > 0 && (
+          {formations.length > 0 && (
+            <CvSection title="Formation">
+              <CredentialList items={formations} compact />
+            </CvSection>
+          )}
+
+          {certificationsOnly.length > 0 && (
             <CvSection title="Certifications">
-              <ul className="space-y-2">
-                {certifications.map((c) => (
-                  <li key={c.id} className="flex flex-wrap justify-between gap-2">
-                    <span>
-                      <span className="font-medium">{c.name}</span> — {c.issuer}
-                    </span>
-                    {c.issue_date && <span className="eyebrow text-stone">{formatMonth(c.issue_date)}</span>}
-                  </li>
-                ))}
-              </ul>
+              <CredentialList items={certificationsOnly} compact />
             </CvSection>
           )}
 

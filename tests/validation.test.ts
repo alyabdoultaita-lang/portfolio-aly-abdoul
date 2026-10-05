@@ -91,3 +91,13 @@ describe("contactSchema", () => {
     assert.deepEqual(fields.sort(), ["email", "message", "name"]);
   });
 });
+
+describe("skillSchema", () => {
+  it("accepte un niveau absent (null) ou entre 0 et 100", async () => {
+    const { skillSchema } = await import("../src/lib/validation/admin.ts");
+    const s = { name: "Meta Ads", category: "Social Media", description: null, sort_order: 0, is_featured: false };
+    assert.ok(skillSchema.safeParse({ ...s, level: null }).success);
+    assert.ok(skillSchema.safeParse({ ...s, level: 80 }).success);
+    assert.equal(skillSchema.safeParse({ ...s, level: 120 }).success, false);
+  });
+});

@@ -7,8 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --test \"tests/**/*.test.ts\"",
-    "typecheck": "next typegen && tsc --noEmit"
+    "test": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test \"tests/**/*.test.ts\"",
+    "typecheck": "next typegen && tsc --noEmit",
+    "seed:generate": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/generate-seed.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

@@ -2,17 +2,15 @@ import "server-only";
 import { cache } from "react";
 import { siteConfig } from "@/config/site";
 import {
-  demoArticles,
-  demoCategories,
-  demoCertifications,
-  demoExperiences,
-  demoProfile,
-  demoProjectCategories,
-  demoProjects,
-  demoSettings,
-  demoSkills,
-  demoTags,
-} from "@/content/demo";
+  cvCertifications,
+  cvExperiences,
+  cvProfile,
+  cvProjectCategories,
+  cvProjects,
+  cvSettings,
+  cvSkills,
+} from "@/content/cv";
+import { demoArticles, demoCategories, demoTags } from "@/content/demo";
 import { getPublicClient } from "@/lib/supabase/public";
 import type {
   Article,
@@ -31,7 +29,7 @@ import type {
 /**
  * Couche de lecture des pages publiques.
  * - Supabase configuré  → requêtes via le client anonyme (RLS : contenus publiés).
- * - Sinon               → données de démonstration (src/content/demo.ts).
+ * - Sinon               → contenu du CV (src/content/cv.ts) + articles d'exemple (src/content/demo.ts).
  * En cas d'erreur réseau, on journalise et on renvoie une valeur vide plutôt
  * que de faire échouer la page entière.
  */
@@ -88,7 +86,7 @@ function logError(scope: string, error: unknown) {
 
 export const getProfile = cache(async (): Promise<Profile> => {
   const db = getPublicClient();
-  if (!db) return demoProfile;
+  if (!db) return cvProfile;
   const { data, error } = await db.from("profiles").select("*").eq("is_primary", true).maybeSingle();
   if (error) logError("profile", error);
   // Base connectée mais profil absent : profil neutre, jamais les données de démo.
@@ -97,16 +95,16 @@ export const getProfile = cache(async (): Promise<Profile> => {
 
 export const getSettings = cache(async (): Promise<SiteSettings> => {
   const db = getPublicClient();
-  if (!db) return demoSettings;
+  if (!db) return cvSettings;
   const { data, error } = await db.from("site_settings").select("key,value");
   if (error) logError("settings", error);
   const stored = Object.fromEntries((data ?? []).map((r) => [r.key, r.value]));
   return {
     // Pas de statistiques enregistrées → section masquée (aucun chiffre inventé).
     stats: stored.stats ?? [],
-    seo: { ...demoSettings.seo, ...(stored.seo ?? {}) },
-    hero: { ...demoSettings.hero, ...(stored.hero ?? {}) },
-    contact_cta: { ...demoSettings.contact_cta, ...(stored.contact_cta ?? {}) },
+    seo: { ...cvSettings.seo, ...(stored.seo ?? {}) },
+    hero: { ...cvSettings.hero, ...(stored.hero ?? {}) },
+    contact_cta: { ...cvSettings.contact_cta, ...(stored.contact_cta ?? {}) },
   };
 });
 
@@ -116,7 +114,7 @@ export const getSettings = cache(async (): Promise<SiteSettings> => {
 
 export const getExperiences = cache(async (): Promise<Experience[]> => {
   const db = getPublicClient();
-  if (!db) return demoExperiences;
+  if (!db) return cvExperiences;
   const { data, error } = await db
     .from("experiences")
     .select("*")
@@ -129,7 +127,7 @@ export const getExperiences = cache(async (): Promise<Experience[]> => {
 
 export const getSkills = cache(async (): Promise<Skill[]> => {
   const db = getPublicClient();
-  if (!db) return demoSkills;
+  if (!db) return cvSkills;
   const { data, error } = await db.from("skills").select("*").order("sort_order");
   if (error) logError("skills", error);
   return (data as Skill[]) ?? [];
@@ -137,7 +135,7 @@ export const getSkills = cache(async (): Promise<Skill[]> => {
 
 export const getCertifications = cache(async (): Promise<Certification[]> => {
   const db = getPublicClient();
-  if (!db) return demoCertifications;
+  if (!db) return cvCertifications;
   const { data, error } = await db.from("certifications").select("*").order("sort_order");
   if (error) logError("certifications", error);
   return (data as Certification[]) ?? [];
@@ -149,7 +147,7 @@ export const getCertifications = cache(async (): Promise<Certification[]> => {
 
 export const getProjectCategories = cache(async (): Promise<ProjectCategory[]> => {
   const db = getPublicClient();
-  if (!db) return demoProjectCategories;
+  if (!db) return cvProjectCategories;
   const { data, error } = await db.from("project_categories").select("*").order("sort_order");
   if (error) logError("project_categories", error);
   return (data as ProjectCategory[]) ?? [];
@@ -158,7 +156,7 @@ export const getProjectCategories = cache(async (): Promise<ProjectCategory[]> =
 export const getProjects = cache(async (opts: { featured?: boolean; limit?: number } = {}): Promise<Project[]> => {
   const db = getPublicClient();
   if (!db) {
-    const list = opts.featured ? demoProjects.filter((p) => p.is_featured) : demoProjects;
+    const list = opts.featured ? cvProjects.filter((p) => p.is_featured) : cvProjects;
     return opts.limit ? list.slice(0, opts.limit) : list;
   }
   let query = db.from("projects").select(PROJECT_SELECT).eq("status", "published").order("sort_order");
@@ -171,7 +169,7 @@ export const getProjects = cache(async (opts: { featured?: boolean; limit?: numb
 
 export const getProjectBySlug = cache(async (slug: string): Promise<Project | null> => {
   const db = getPublicClient();
-  if (!db) return demoProjects.find((p) => p.slug === slug) ?? null;
+  if (!db) return cvProjects.find((p) => p.slug === slug) ?? null;
   const { data, error } = await db
     .from("projects")
     .select(PROJECT_SELECT)
@@ -306,7 +304,7 @@ export async function getSitemapEntries() {
   if (!db) {
     return {
       articles: demoArticles.map((a) => ({ slug: a.slug, updated_at: a.published_at })),
-      projects: demoProjects.map((p) => ({ slug: p.slug, updated_at: null as string | null })),
+      projects: cvProjects.map((p) => ({ slug: p.slug, updated_at: null as string | null })),
     };
   }
   const [articles, projects] = await Promise.all([

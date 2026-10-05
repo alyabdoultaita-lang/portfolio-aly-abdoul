@@ -17,8 +17,9 @@ npm install
 npm run dev
 ```
 
-Ouvrez <http://localhost:3000>. Sans configuration Supabase, le site affiche les **données de démonstration**
-de `src/content/demo.ts` et un bandeau « Mode démo » le signale. Aucune de ces données n'est réelle.
+Ouvrez <http://localhost:3000>. Sans configuration Supabase, le site affiche le **contenu réel issu du CV**
+(`src/content/cv.ts` : profil, expériences, compétences, formations, certifications, projets web) et des
+**articles de blog d'exemple** (`src/content/demo.ts`), signalés par le bandeau « Mode local ».
 
 ## Connecter Supabase
 
@@ -26,8 +27,9 @@ de `src/content/demo.ts` et un bandeau « Mode démo » le signale. Aucune de ce
 2. **SQL Editor** → collez et exécutez `supabase/migrations/0001_schema.sql`
    (tables, index, recherche plein texte, politiques RLS, bucket de stockage `media`).
    Le script peut être ré-exécuté sans erreur.
-3. *(Facultatif)* exécutez `supabase/seed.sql` : profil, paramètres, catégories et une compétence par domaine,
-   à compléter ensuite. Aucun projet ni article fictif n'est créé.
+3. Exécutez `supabase/seed.sql` : il remplit la base avec le contenu du CV (profil, expériences,
+   compétences, formations, certifications, projets web). Chaque table n'est remplie que si elle est vide.
+   Ce fichier est généré depuis `src/content/cv.ts` par `npm run seed:generate`. Aucun article fictif n'est inséré.
 4. Copiez `.env.example` en `.env.local` et renseignez :
 
    ```env
@@ -91,14 +93,16 @@ non autorisée au niveau de la base.
 | `npm run start` | Serveur de production |
 | `npm run lint` | ESLint |
 | `npm run typecheck` | Vérification TypeScript |
-| `npm test` | Tests unitaires (utilitaires, validation, anti-redirection ouverte) |
+| `npm test` | Tests unitaires (utilitaires, validation, anti-redirection ouverte, cohérence du contenu du CV) |
+| `npm run seed:generate` | Régénère `supabase/seed.sql` à partir de `src/content/cv.ts` |
 
 ## Personnaliser
 
 - **Contenus** : tout passe par `/admin` une fois Supabase connecté.
 - **Navigation, coordonnées GPS du hero, catégories de compétences** : `src/config/site.ts`.
 - **Couleurs, typographies, animations** : tokens dans `src/app/globals.css` (`@theme`), polices dans `src/app/layout.tsx`.
-- **Données de démo** : `src/content/demo.ts` (utilisées uniquement sans Supabase).
+- **Contenu du CV** : `src/content/cv.ts` (site sans Supabase + source du seed).
+- **Articles d'exemple** : `src/content/demo.ts` (uniquement sans Supabase, jamais insérés en base).
 
 ## SEO & performance
 

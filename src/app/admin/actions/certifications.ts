@@ -9,6 +9,7 @@ export async function saveCertification(id: string | null, _prev: FormState, fd:
   const supabase = await adminClientOrNull();
   if (!supabase) return UNAUTHORIZED;
   const parsed = certificationSchema.safeParse({
+    kind: form.str(fd, "kind") === "formation" ? "formation" : "certification",
     name: form.str(fd, "name"),
     issuer: form.str(fd, "issuer"),
     issue_date: form.opt(fd, "issue_date"),
@@ -25,7 +26,7 @@ export async function saveCertification(id: string | null, _prev: FormState, fd:
   if (error) return dbError(error);
 
   revalidateSite();
-  return { status: "success", message: id ? "Certification mise à jour." : "Certification ajoutée." };
+  return { status: "success", message: id ? "Élément mis à jour." : "Élément ajouté." };
 }
 
 export async function deleteCertification(id: string) {

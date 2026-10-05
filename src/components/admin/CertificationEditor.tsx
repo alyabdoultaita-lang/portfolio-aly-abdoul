@@ -6,7 +6,7 @@ import type { FormState } from "@/lib/validation/contact";
 import { formatMonth } from "@/lib/utils";
 import { ActionForm } from "./ActionForm";
 import { DeleteButton } from "./DeleteButton";
-import { TextField } from "./Fields";
+import { SelectField, TextField } from "./Fields";
 
 type Action = (prev: FormState, fd: FormData) => Promise<FormState>;
 
@@ -14,9 +14,18 @@ export function CertificationForm({ certification: c, action }: { certification?
   return (
     <ActionForm action={action} compact submitLabel={c ? "Mettre à jour" : "Ajouter"}>
       <div className="grid gap-4 sm:grid-cols-2">
+        <SelectField
+          name="kind"
+          label="Type"
+          defaultValue={c?.kind ?? "certification"}
+          options={[
+            { value: "certification", label: "Certification (badge, MOOC…)" },
+            { value: "formation", label: "Formation (diplôme, programme)" },
+          ]}
+        />
         <TextField name="name" label="Intitulé *" defaultValue={c?.name} />
-        <TextField name="issuer" label="Organisme *" defaultValue={c?.issuer} />
-        <TextField name="issue_date" label="Date d'obtention" type="date" defaultValue={c?.issue_date ?? ""} />
+        <TextField name="issuer" label="Organisme / établissement *" defaultValue={c?.issuer} />
+        <TextField name="issue_date" label="Date d'obtention" type="date" defaultValue={c?.issue_date ?? ""} hint="Pour une formation, seule l'année est affichée." />
         <TextField name="expiry_date" label="Date d'expiration" type="date" defaultValue={c?.expiry_date ?? ""} />
         <TextField name="credential_id" label="Identifiant" defaultValue={c?.credential_id ?? ""} />
         <TextField name="credential_url" label="URL de vérification" type="url" defaultValue={c?.credential_url ?? ""} placeholder="https://" />
@@ -32,7 +41,10 @@ export function CertificationRow({ certification, action, deleteAction }: { cert
     <li className="p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="font-medium">{certification.name}</p>
+          <p className="font-medium">
+            <span className="eyebrow mr-2 border border-line px-1.5 text-stone">{certification.kind === "formation" ? "Formation" : "Certif."}</span>
+            {certification.name}
+          </p>
           <p className="text-sm text-stone">
             {certification.issuer}
             {certification.issue_date && ` · ${formatMonth(certification.issue_date)}`}

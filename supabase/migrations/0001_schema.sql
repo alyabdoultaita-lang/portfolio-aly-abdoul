@@ -123,13 +123,15 @@ create table if not exists public.skills (
   id uuid primary key default gen_random_uuid(),
   name text not null,
   category text not null,
-  level int not null default 70 check (level between 0 and 100),
+  level int check (level between 0 and 100), -- null = niveau non affiché
   description text,
   sort_order int not null default 0,
   is_featured boolean not null default false,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+-- Mise à niveau d'une base créée avec une version antérieure du script
+alter table public.skills alter column level drop not null, alter column level drop default;
 create index if not exists skills_category on public.skills (category, sort_order);
 create or replace trigger skills_updated_at before update on public.skills
   for each row execute function public.set_updated_at();
@@ -236,6 +238,8 @@ create index if not exists article_tags_tag on public.article_tags (tag_id);
 
 create table if not exists public.certifications (
   id uuid primary key default gen_random_uuid(),
+  -- 'certification' (badge, MOOC…) ou 'formation' (diplôme, programme de formation)
+  kind text not null default 'certification' check (kind in ('certification', 'formation')),
   name text not null,
   issuer text not null,
   issue_date date,
@@ -246,6 +250,8 @@ create table if not exists public.certifications (
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+alter table public.certifications
+  add column if not exists kind text not null default 'certification' check (kind in ('certification', 'formation'));
 create or replace trigger certifications_updated_at before update on public.certifications
   for each row execute function public.set_updated_at();
 
