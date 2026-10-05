@@ -65,9 +65,12 @@ export async function listArticles() {
 
 export async function getArticle(id: string) {
   const supabase = await db();
-  const { data } = await supabase.from("articles").select("*,article_tags(tag:tags(id,name,slug))").eq("id", id).maybeSingle();
+  const { data } = await supabase.from("articles")
+    .select(
+      "id,title,subtitle,slug,excerpt,content,cover_url,cover_alt,author,category_id,status,published_at,reading_time,meta_title,meta_description,created_at,updated_at,article_tags(tag:tags(id,name,slug))",
+    ).eq("id", id).maybeSingle();
   if (!data) return null;
-  const { article_tags, ...rest } = data as Article & { article_tags: { tag: Tag | null }[] };
+  const { article_tags, ...rest } = data as unknown as Article & { article_tags: { tag: Tag | null }[] };
   return { ...rest, tags: article_tags.map((t) => t.tag).filter((t): t is Tag => Boolean(t)) } as Article;
 }
 

@@ -12,7 +12,7 @@ export default async function SettingsAdminPage() {
   const [stored, categories, tags] = await Promise.all([getAdminSettings(), listCategories(), listTags()]);
   // Valeurs par défaut = textes de démonstration, à personnaliser.
   const settings: SiteSettings = {
-    stats: (stored.stats as SiteSettings["stats"]) ?? demoSettings.stats,
+    stats: (stored.stats as SiteSettings["stats"]) ?? [],
     hero: { ...demoSettings.hero, ...(stored.hero as object) },
     contact_cta: { ...demoSettings.contact_cta, ...(stored.contact_cta as object) },
     seo: { ...demoSettings.seo, ...(stored.seo as object) },

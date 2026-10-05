@@ -25,6 +25,7 @@ de `src/content/demo.ts` et un bandeau « Mode démo » le signale. Aucune de ce
 1. Créez un projet sur [supabase.com](https://supabase.com).
 2. **SQL Editor** → collez et exécutez `supabase/migrations/0001_schema.sql`
    (tables, index, recherche plein texte, politiques RLS, bucket de stockage `media`).
+   Le script peut être ré-exécuté sans erreur.
 3. *(Facultatif)* exécutez `supabase/seed.sql` : profil, paramètres, catégories et une compétence par domaine,
    à compléter ensuite. Aucun projet ni article fictif n'est créé.
 4. Copiez `.env.example` en `.env.local` et renseignez :
@@ -35,6 +36,10 @@ de `src/content/demo.ts` et un bandeau « Mode démo » le signale. Aucune de ce
    NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
    ```
 
+   *Project Settings › API Keys* : utilisez la clé **publique** (« anon » ou « publishable », `sb_publishable_…`).
+   **Ne mettez jamais** la clé `service_role` / `secret` dans ces variables : l'application n'en a pas besoin,
+   toutes les autorisations passent par les politiques RLS.
+
 5. **Créer le compte administrateur** :
    - *Authentication › Users › Add user* : e-mail + mot de passe (cochez « Auto confirm user »).
    - Dans le SQL Editor, donnez-lui les droits :
@@ -44,8 +49,9 @@ de `src/content/demo.ts` et un bandeau « Mode démo » le signale. Aucune de ce
      select id from auth.users where email = 'votre-email@exemple.com';
      ```
 
-   - *Authentication › Sign In / Providers* : vous pouvez désactiver les inscriptions publiques
-     (« Allow new users to sign up »), seul l'administrateur a besoin d'un compte.
+   - *Authentication › Sign In / Providers* : **désactivez les inscriptions publiques**
+     (« Allow new users to sign up ») — seul l'administrateur a besoin d'un compte. Un compte non
+     administrateur ne peut de toute façon rien modifier (RLS), mais inutile d'en laisser créer.
 
 6. Relancez `npm run dev`, puis connectez-vous sur <http://localhost:3000/admin>.
 
@@ -84,6 +90,8 @@ non autorisée au niveau de la base.
 | `npm run build` | Build de production |
 | `npm run start` | Serveur de production |
 | `npm run lint` | ESLint |
+| `npm run typecheck` | Vérification TypeScript |
+| `npm test` | Tests unitaires (utilitaires, validation, anti-redirection ouverte) |
 
 ## Personnaliser
 

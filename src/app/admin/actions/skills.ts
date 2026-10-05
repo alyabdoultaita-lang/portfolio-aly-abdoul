@@ -3,10 +3,11 @@
 import { adminClient } from "@/lib/auth";
 import { skillSchema } from "@/lib/validation/admin";
 import type { FormState } from "@/lib/validation/contact";
-import { dbError, form, revalidateSite, validationError } from "./helpers";
+import { adminClientOrNull, dbError, form, revalidateSite, UNAUTHORIZED, validationError } from "./helpers";
 
 export async function saveSkill(id: string | null, _prev: FormState, fd: FormData): Promise<FormState> {
-  const supabase = await adminClient();
+  const supabase = await adminClientOrNull();
+  if (!supabase) return UNAUTHORIZED;
   const parsed = skillSchema.safeParse({
     name: form.str(fd, "name"),
     category: form.str(fd, "new_category") || form.str(fd, "category"),

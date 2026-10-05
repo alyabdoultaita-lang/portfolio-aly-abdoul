@@ -1,12 +1,12 @@
 "use server";
 
-import { adminClient } from "@/lib/auth";
 import { profileSchema } from "@/lib/validation/admin";
 import type { FormState } from "@/lib/validation/contact";
-import { dbError, form, revalidateSite, validationError } from "./helpers";
+import { adminClientOrNull, dbError, form, revalidateSite, UNAUTHORIZED, validationError } from "./helpers";
 
 export async function saveProfile(id: string | null, _prev: FormState, fd: FormData): Promise<FormState> {
-  const supabase = await adminClient();
+  const supabase = await adminClientOrNull();
+  if (!supabase) return UNAUTHORIZED;
   const parsed = profileSchema.safeParse({
     full_name: form.str(fd, "full_name"),
     headline: form.str(fd, "headline"),

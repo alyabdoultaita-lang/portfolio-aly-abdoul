@@ -1,12 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { SetupNotice } from "@/components/admin/SetupNotice";
+import { getAdmin } from "@/lib/auth";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { LoginForm } from "./LoginForm";
 
 export const metadata: Metadata = { title: "Connexion" };
 
 export default async function LoginPage({ searchParams }: PageProps<"/admin/login">) {
+  // Administrateur déjà connecté → tableau de bord.
+  if (await getAdmin()) redirect("/admin");
+
   const sp = await searchParams;
   const next = typeof sp.next === "string" ? sp.next : undefined;
   const notice = sp.error === "unauthorized" ? "Session expirée ou droits insuffisants. Reconnectez-vous." : undefined;

@@ -13,7 +13,7 @@ retenue. Il sert de référence pour faire évoluer le site.
 | Contenu entièrement administrable (blog, projets, expériences…) | Base PostgreSQL (Supabase) + back-office `/admin` protégé |
 | Blog indexable (`/blog/mon-article`) | Routes dynamiques par `slug`, metadata par article, sitemap dynamique, JSON-LD `BlogPosting` |
 | Publication programmée | Colonne `published_at` + politique RLS « visible si `published_at <= now()` » + revalidation périodique |
-| Sécurité de l'admin | Supabase Auth (cookies httpOnly), `proxy.ts` + vérification serveur + Row Level Security en base |
+| Sécurité de l'admin | Supabase Auth (session en cookies, jeton revalidé côté serveur), `proxy.ts` + vérification serveur + Row Level Security en base |
 | Déploiement Vercel | Next.js App Router, aucune dépendance serveur spécifique |
 | Pas de données fictives définitives | Données de démonstration isolées dans `src/content/demo.ts`, utilisées **uniquement** quand Supabase n'est pas configuré, et signalées par un bandeau |
 

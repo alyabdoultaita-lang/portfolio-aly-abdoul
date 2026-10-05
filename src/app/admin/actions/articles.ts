@@ -5,7 +5,7 @@ import { adminClient } from "@/lib/auth";
 import { readingTime, slugify, stripHtml, truncate } from "@/lib/utils";
 import { articleSchema } from "@/lib/validation/admin";
 import type { FormState } from "@/lib/validation/contact";
-import { dbError, form, revalidateSite, validationError } from "./helpers";
+import { adminClientOrNull, dbError, form, revalidateSite, UNAUTHORIZED, validationError } from "./helpers";
 
 /**
  * Création / mise à jour d'un article.
@@ -13,7 +13,8 @@ import { dbError, form, revalidateSite, validationError } from "./helpers";
  * « scheduled » = published + date future (filtrée par la RLS publique).
  */
 export async function saveArticle(id: string | null, _prev: FormState, fd: FormData): Promise<FormState> {
-  const supabase = await adminClient();
+  const supabase = await adminClientOrNull();
+  if (!supabase) return UNAUTHORIZED;
 
   const title = form.str(fd, "title");
   const content = form.str(fd, "content");
@@ -66,15 +67,22 @@ export async function saveArticle(id: string | null, _prev: FormState, fd: FormD
   if (error) return dbError(error);
 
   // Tags : « SEO, Google Ads » → upsert + liaison
-  const tagNames = form.csv(fd, "tags");
-  await supabase.from("article_tags").delete().eq("article_id", saved.id);
-  if (tagNames.length > 0) {
+  // Dédoublonnage par slug : « SEO, seo » ferait échouer l'upsert.
+  const tagRows = [
+    ...new Map(
+      form
+        .csv(fd, "tags")
+        .map((name) => ({ name: name.slice(0, 80), slug: slugify(name) }))
+        .filter((t) => t.slug)
+        .map((t) => [t.slug, t]),
+    ).values(),
+  ];
+  const { error: unlinkError } = await supabase.from("article_tags").delete().eq("article_id", saved.id);
+  if (unlinkError) return dbError(unlinkError);
+  if (tagRows.length > 0) {
     const { data: tags, error: tagError } = await supabase
       .from("tags")
-      .upsert(
-        tagNames.map((name) => ({ name, slug: slugify(name) })),
-        { onConflict: "slug" },
-      )
+      .upsert(tagRows, { onConflict: "slug" })
       .select("id");
     if (tagError) return dbError(tagError);
     const { error: linkError } = await supabase

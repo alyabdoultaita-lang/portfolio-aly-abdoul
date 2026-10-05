@@ -5,7 +5,7 @@ import { slugify } from "@/lib/utils";
 import { termSchema } from "@/lib/validation/admin";
 import type { FormState } from "@/lib/validation/contact";
 import type { Stat } from "@/types/content";
-import { dbError, form, revalidateSite, validationError } from "./helpers";
+import { adminClientOrNull, dbError, form, revalidateSite, UNAUTHORIZED, validationError } from "./helpers";
 
 const TERM_TABLES = ["categories", "tags"] as const;
 function assertTermTable(table: string): asserts table is (typeof TERM_TABLES)[number] {
@@ -13,7 +13,8 @@ function assertTermTable(table: string): asserts table is (typeof TERM_TABLES)[n
 }
 
 export async function saveSettings(_prev: FormState, fd: FormData): Promise<FormState> {
-  const supabase = await adminClient();
+  const supabase = await adminClientOrNull();
+  if (!supabase) return UNAUTHORIZED;
 
   const stats: Stat[] = [0, 1, 2, 3]
     .map((i) => ({
@@ -47,7 +48,8 @@ export async function saveSettings(_prev: FormState, fd: FormData): Promise<Form
 /** Catégories et tags du blog. */
 export async function saveTerm(table: "categories" | "tags", _prev: FormState, fd: FormData): Promise<FormState> {
   assertTermTable(table);
-  const supabase = await adminClient();
+  const supabase = await adminClientOrNull();
+  if (!supabase) return UNAUTHORIZED;
   const name = form.str(fd, "name");
   const parsed = termSchema.safeParse({ name, slug: slugify(name) });
   if (!parsed.success) return validationError(parsed.error);

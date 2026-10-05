@@ -4,10 +4,11 @@ import { redirect } from "next/navigation";
 import { adminClient } from "@/lib/auth";
 import { experienceSchema } from "@/lib/validation/admin";
 import type { FormState } from "@/lib/validation/contact";
-import { dbError, form, revalidateSite, validationError } from "./helpers";
+import { adminClientOrNull, dbError, form, revalidateSite, UNAUTHORIZED, validationError } from "./helpers";
 
 export async function saveExperience(id: string | null, _prev: FormState, fd: FormData): Promise<FormState> {
-  const supabase = await adminClient();
+  const supabase = await adminClientOrNull();
+  if (!supabase) return UNAUTHORIZED;
   const isCurrent = form.bool(fd, "is_current");
 
   const parsed = experienceSchema.safeParse({

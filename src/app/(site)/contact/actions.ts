@@ -8,11 +8,6 @@ export async function sendMessage(_prev: FormState, formData: FormData): Promise
   // Champ invisible rempli = robot → on fait semblant d'accepter.
   if (formData.get("website")) return { status: "success", message: "Merci, votre message a bien été envoyé." };
 
-  const startedAt = Number(formData.get("started_at"));
-  if (Number.isFinite(startedAt) && Date.now() - startedAt < 2500) {
-    return { status: "error", message: "Envoi trop rapide, veuillez réessayer." };
-  }
-
   const parsed = contactSchema.safeParse({
     name: formData.get("name"),
     email: formData.get("email"),
@@ -26,6 +21,13 @@ export async function sendMessage(_prev: FormState, formData: FormData): Promise
       message: "Merci de corriger les champs indiqués.",
       fieldErrors: parsed.error.flatten().fieldErrors,
     };
+  }
+
+  // Anti-robot : formulaire rempli en moins de 2,5 s (vérifié après la validation
+  // pour qu'un humain voie d'abord les champs à corriger).
+  const startedAt = Number(formData.get("started_at"));
+  if (Number.isFinite(startedAt) && startedAt > 0 && Date.now() - startedAt < 2500) {
+    return { status: "error", message: "Envoi trop rapide, veuillez réessayer dans un instant." };
   }
 
   const db = getPublicClient();

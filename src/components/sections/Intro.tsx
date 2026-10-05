@@ -13,7 +13,7 @@ export function Intro({ profile, stats }: { profile: Profile; stats: Stat[] }) {
         </p>
         <div className="lg:col-span-9">
           <h2 id="intro-title" className="text-[clamp(1.75rem,4vw,3.5rem)] font-medium leading-[1.05] tracking-[-0.035em]" data-reveal>
-            {profile.short_bio}
+            {profile.short_bio ?? profile.headline}
           </h2>
           <Link href="/a-propos" className="group mt-10 inline-flex items-center gap-3 text-lg font-medium" data-reveal>
             <span className="link-underline">En savoir plus sur mon parcours</span>
@@ -23,6 +23,7 @@ export function Intro({ profile, stats }: { profile: Profile; stats: Stat[] }) {
       </div>
 
       {/* Statistiques — valeurs modifiables dans Admin > Paramètres */}
+      {stats.length > 0 && (
       <dl className="mt-20 grid grid-cols-2 border-t border-ink sm:mt-28 lg:grid-cols-4">
         {stats.map((stat, i) => (
           <div
@@ -38,6 +39,7 @@ export function Intro({ profile, stats }: { profile: Profile; stats: Stat[] }) {
           </div>
         ))}
       </dl>
+      )}
     </section>
   );
 }

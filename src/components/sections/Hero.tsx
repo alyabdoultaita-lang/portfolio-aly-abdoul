@@ -60,12 +60,11 @@ export function Hero({ profile, settings }: { profile: Profile; settings: SiteSe
                 <span className="eyebrow mb-3 block text-stone">Poste</span>
                 {profile.headline}
               </p>
-              <p
-                className="fade-up font-serif text-2xl italic leading-tight sm:text-[1.75rem]"
-                style={delay(700)}
-              >
-                « {profile.tagline} »
-              </p>
+              {profile.tagline && (
+                <p className="fade-up font-serif text-2xl italic leading-tight sm:text-[1.75rem]" style={delay(700)}>
+                  « {profile.tagline} »
+                </p>
+              )}
             </div>
 
             <div className="fade-up mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap" style={delay(820)}>

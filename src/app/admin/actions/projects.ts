@@ -5,10 +5,11 @@ import { adminClient } from "@/lib/auth";
 import { slugify } from "@/lib/utils";
 import { projectSchema, termSchema } from "@/lib/validation/admin";
 import type { FormState } from "@/lib/validation/contact";
-import { dbError, form, revalidateSite, validationError } from "./helpers";
+import { adminClientOrNull, dbError, form, revalidateSite, UNAUTHORIZED, validationError } from "./helpers";
 
 export async function saveProject(id: string | null, _prev: FormState, fd: FormData): Promise<FormState> {
-  const supabase = await adminClient();
+  const supabase = await adminClientOrNull();
+  if (!supabase) return UNAUTHORIZED;
   const title = form.str(fd, "title");
   const year = form.opt(fd, "year");
 
@@ -54,7 +55,8 @@ export async function deleteProject(id: string) {
 }
 
 export async function saveProjectCategory(_prev: FormState, fd: FormData): Promise<FormState> {
-  const supabase = await adminClient();
+  const supabase = await adminClientOrNull();
+  if (!supabase) return UNAUTHORIZED;
   const name = form.str(fd, "name");
   const parsed = termSchema.safeParse({ name, slug: slugify(name) });
   if (!parsed.success) return validationError(parsed.error);

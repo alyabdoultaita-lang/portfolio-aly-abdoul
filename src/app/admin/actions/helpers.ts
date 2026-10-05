@@ -1,6 +1,8 @@
 import "server-only";
 import { revalidatePath } from "next/cache";
 import type { z } from "zod";
+import { getAdmin } from "@/lib/auth";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { FormState } from "@/lib/validation/contact";
 import { csvToArray, linesToArray } from "@/lib/utils";
 
@@ -41,4 +43,18 @@ export function dbError(error: { message: string; code?: string }): FormState {
 /** Rafraîchit tout le site public (ISR) après une modification. */
 export function revalidateSite() {
   revalidatePath("/", "layout");
+}
+
+export const UNAUTHORIZED: FormState = {
+  status: "error",
+  message: "Session expirée ou droits insuffisants : reconnectez-vous (votre saisie est conservée).",
+};
+
+/**
+ * Client Supabase de l'administrateur, ou null si la session n'est plus valide.
+ * Les actions de formulaire renvoient alors UNAUTHORIZED au lieu de lever une
+ * exception (qui afficherait une page d'erreur et ferait perdre la saisie).
+ */
+export async function adminClientOrNull() {
+  return (await getAdmin()) ? createSupabaseServerClient() : null;
 }

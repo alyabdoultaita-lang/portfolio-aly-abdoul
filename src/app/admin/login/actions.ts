@@ -1,20 +1,9 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { z } from "zod";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { loginSchema, safeAdminRedirect } from "@/lib/validation/auth";
 import type { FormState } from "@/lib/validation/contact";
-
-const loginSchema = z.object({
-  email: z.email("Adresse e-mail invalide."),
-  password: z.string().min(6, "Mot de passe trop court."),
-});
-
-/** N'accepte que des chemins internes à /admin (évite les redirections ouvertes). */
-function safeNext(value: FormDataEntryValue | null) {
-  const next = typeof value === "string" ? value : "";
-  return /^\/admin(\/[\w\-/]*)?$/.test(next) ? next : "/admin";
-}
 
 export async function signIn(_prev: FormState, formData: FormData): Promise<FormState> {
   const parsed = loginSchema.safeParse({ email: formData.get("email"), password: formData.get("password") });
@@ -35,7 +24,7 @@ export async function signIn(_prev: FormState, formData: FormData): Promise<Form
     return { status: "error", message: "Ce compte n'a pas les droits d'administration." };
   }
 
-  redirect(safeNext(formData.get("next")));
+  redirect(safeAdminRedirect(formData.get("next")));
 }
 
 export async function signOut() {

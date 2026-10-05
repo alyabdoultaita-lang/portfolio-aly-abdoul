@@ -33,7 +33,10 @@ export function readingTime(html: string) {
 
 export function truncate(text: string, max: number) {
   if (text.length <= max) return text;
-  return `${text.slice(0, max - 1).replace(/\s+\S*$/, "")}…`;
+  const cut = text.slice(0, max - 1);
+  // On ne retire le dernier mot que s'il a été coupé en plein milieu.
+  const midWord = !/\s/.test(text[max - 1] ?? " ");
+  return `${(midWord ? cut.replace(/\s+\S*$/, "") : cut).trimEnd()}…`;
 }
 
 const dateFormatter = new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long", year: "numeric" });

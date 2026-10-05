@@ -1,7 +1,7 @@
 -- ============================================================================
 -- Portfolio Abdoul Aly TAITA — schéma initial
 -- À exécuter dans Supabase : SQL Editor > New query > coller > Run
--- (ou `supabase db push` avec la CLI Supabase).
+-- (ou `supabase db push` avec la CLI Supabase). Le script peut être ré-exécuté.
 -- ============================================================================
 
 create extension if not exists "pgcrypto";
@@ -19,7 +19,7 @@ as $$ select extensions.unaccent('extensions.unaccent'::regdictionary, $1) $$;
 -- ---------------------------------------------------------------------------
 
 create or replace function public.set_updated_at()
-returns trigger language plpgsql as $$
+returns trigger language plpgsql set search_path = '' as $$
 begin
   new.updated_at = now();
   return new;
@@ -283,6 +283,7 @@ alter table public.certifications enable row level security;
 alter table public.messages enable row level security;
 
 -- admins : un utilisateur peut seulement vérifier sa propre ligne
+drop policy if exists "admins_self_read" on public.admins;
 create policy "admins_self_read" on public.admins
   for select using (user_id = auth.uid());
 
@@ -293,44 +294,58 @@ begin
   foreach t in array array['profiles','site_settings','skills','project_categories',
                            'categories','tags','certifications']
   loop
+    execute format('drop policy if exists "%1$s_public_read" on public.%1$I;', t);
+    execute format('drop policy if exists "%1$s_admin_write" on public.%1$I;', t);
     execute format('create policy "%1$s_public_read" on public.%1$I for select using (true);', t);
     execute format('create policy "%1$s_admin_write" on public.%1$I for all using (public.is_admin()) with check (public.is_admin());', t);
   end loop;
 end $$;
 
 -- Expériences : visibles si is_visible
+drop policy if exists "experiences_public_read" on public.experiences;
 create policy "experiences_public_read" on public.experiences
   for select using (is_visible or public.is_admin());
+drop policy if exists "experiences_admin_write" on public.experiences;
 create policy "experiences_admin_write" on public.experiences
   for all using (public.is_admin()) with check (public.is_admin());
 
 -- Projets : publiés seulement
+drop policy if exists "projects_public_read" on public.projects;
 create policy "projects_public_read" on public.projects
   for select using (status = 'published' or public.is_admin());
+drop policy if exists "projects_admin_write" on public.projects;
 create policy "projects_admin_write" on public.projects
   for all using (public.is_admin()) with check (public.is_admin());
 
 -- Articles : publiés ET date de publication atteinte (gère la programmation)
+drop policy if exists "articles_public_read" on public.articles;
 create policy "articles_public_read" on public.articles
   for select using (
     (status = 'published' and published_at is not null and published_at <= now())
     or public.is_admin()
   );
+drop policy if exists "articles_admin_write" on public.articles;
 create policy "articles_admin_write" on public.articles
   for all using (public.is_admin()) with check (public.is_admin());
 
+drop policy if exists "article_tags_public_read" on public.article_tags;
 create policy "article_tags_public_read" on public.article_tags
   for select using (true);
+drop policy if exists "article_tags_admin_write" on public.article_tags;
 create policy "article_tags_admin_write" on public.article_tags
   for all using (public.is_admin()) with check (public.is_admin());
 
 -- Messages : tout le monde peut écrire, seul l'admin lit / modifie / supprime
+drop policy if exists "messages_public_insert" on public.messages;
 create policy "messages_public_insert" on public.messages
   for insert with check (is_read = false);
+drop policy if exists "messages_admin_read" on public.messages;
 create policy "messages_admin_read" on public.messages
   for select using (public.is_admin());
+drop policy if exists "messages_admin_update" on public.messages;
 create policy "messages_admin_update" on public.messages
   for update using (public.is_admin()) with check (public.is_admin());
+drop policy if exists "messages_admin_delete" on public.messages;
 create policy "messages_admin_delete" on public.messages
   for delete using (public.is_admin());
 
@@ -343,11 +358,15 @@ values ('media', 'media', true, 10485760,
         array['image/jpeg','image/png','image/webp','image/avif','image/gif','image/svg+xml','application/pdf'])
 on conflict (id) do nothing;
 
+drop policy if exists "media_public_read" on storage.objects;
 create policy "media_public_read" on storage.objects
   for select using (bucket_id = 'media');
+drop policy if exists "media_admin_insert" on storage.objects;
 create policy "media_admin_insert" on storage.objects
   for insert with check (bucket_id = 'media' and public.is_admin());
+drop policy if exists "media_admin_update" on storage.objects;
 create policy "media_admin_update" on storage.objects
   for update using (bucket_id = 'media' and public.is_admin());
+drop policy if exists "media_admin_delete" on storage.objects;
 create policy "media_admin_delete" on storage.objects
   for delete using (bucket_id = 'media' and public.is_admin());

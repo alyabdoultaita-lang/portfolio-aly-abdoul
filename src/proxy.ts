@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 /**
  * Protection de /admin :
- * - rafraîchit la session Supabase (cookies httpOnly) à chaque requête admin ;
+ * - rafraîchit la session Supabase (cookies de session) à chaque requête admin ;
  * - redirige vers /admin/login si aucun utilisateur n'est connecté.
  * La vérification du rôle administrateur est refaite côté serveur (layout +
  * Server Actions) et en base (RLS) : ce proxy n'est qu'une première barrière.
@@ -35,7 +35,12 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user && !isLogin) {
+  // Les Server Actions vérifient elles-mêmes les droits (adminClientOrNull) et
+  // renvoient « Session expirée » : on ne les redirige pas, pour que le
+  // formulaire affiche le message sans perdre la saisie.
+  const isServerAction = request.method === "POST" && request.headers.has("next-action");
+
+  if (!user && !isLogin && !isServerAction) {
     const loginUrl = request.nextUrl.clone();
     loginUrl.pathname = "/admin/login";
     loginUrl.search = "";
@@ -43,12 +48,9 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  if (user && isLogin) {
-    const adminUrl = request.nextUrl.clone();
-    adminUrl.pathname = "/admin";
-    adminUrl.search = "";
-    return NextResponse.redirect(adminUrl);
-  }
+  // Pas de redirection « connecté → /admin » ici : un utilisateur connecté mais
+  // non administrateur serait renvoyé en boucle entre /admin et /admin/login.
+  // C'est la page de connexion qui vérifie le rôle (getAdmin) avant de rediriger.
 
   response.headers.set("X-Robots-Tag", "noindex, nofollow");
   return response;

@@ -56,6 +56,28 @@ function mapArticle(row: ArticleRow): Article {
   };
 }
 
+/** Profil minimal utilisé quand Supabase est connecté mais qu'aucun profil n'existe encore. */
+const emptyProfile: Profile = {
+  id: "empty",
+  full_name: siteConfig.name,
+  headline: "Responsable Digital / Marketing Digital",
+  tagline: null,
+  short_bio: null,
+  bio: null,
+  location: "Burkina Faso",
+  email: null,
+  phone: null,
+  photo_url: null,
+  cv_url: null,
+  linkedin_url: null,
+  twitter_url: null,
+  github_url: null,
+  website_url: null,
+  available_for_work: false,
+  languages: [],
+  interests: [],
+};
+
 function logError(scope: string, error: unknown) {
   console.error(`[data:${scope}]`, error);
 }
@@ -69,7 +91,8 @@ export const getProfile = cache(async (): Promise<Profile> => {
   if (!db) return demoProfile;
   const { data, error } = await db.from("profiles").select("*").eq("is_primary", true).maybeSingle();
   if (error) logError("profile", error);
-  return (data as Profile | null) ?? demoProfile;
+  // Base connectée mais profil absent : profil neutre, jamais les données de démo.
+  return (data as Profile | null) ?? emptyProfile;
 });
 
 export const getSettings = cache(async (): Promise<SiteSettings> => {
@@ -79,7 +102,8 @@ export const getSettings = cache(async (): Promise<SiteSettings> => {
   if (error) logError("settings", error);
   const stored = Object.fromEntries((data ?? []).map((r) => [r.key, r.value]));
   return {
-    stats: stored.stats ?? demoSettings.stats,
+    // Pas de statistiques enregistrées → section masquée (aucun chiffre inventé).
+    stats: stored.stats ?? [],
     seo: { ...demoSettings.seo, ...(stored.seo ?? {}) },
     hero: { ...demoSettings.hero, ...(stored.hero ?? {}) },
     contact_cta: { ...demoSettings.contact_cta, ...(stored.contact_cta ?? {}) },

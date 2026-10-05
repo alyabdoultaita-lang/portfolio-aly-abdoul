@@ -1,6 +1,11 @@
 import { z } from "zod";
 
-const url = z.union([z.url("URL invalide (https://…)"), z.string().regex(/^\//, "URL invalide"), z.null()]);
+/** URL http(s) ou chemin interne (« /… ») ; javascript:, data:… sont refusés. */
+const url = z.union([
+  z.url({ protocol: /^https?$/, message: "URL invalide (https://…)" }),
+  z.string().regex(/^\/(?!\/)/, "URL invalide"),
+  z.null(),
+]);
 const slug = z
   .string()
   .min(1, "Slug requis.")

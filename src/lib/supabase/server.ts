@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { supabaseAnonKey, supabaseUrl } from "./env";
 
 /**
- * Client lié à la session de l'utilisateur (cookies httpOnly).
+ * Client lié à la session de l'utilisateur (cookies gérés par @supabase/ssr).
  * À utiliser dans l'admin, les Server Actions et les Route Handlers.
  */
 export async function createSupabaseServerClient() {
