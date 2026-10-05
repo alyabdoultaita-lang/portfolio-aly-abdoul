@@ -95,9 +95,24 @@ describe("contactSchema", () => {
 describe("skillSchema", () => {
   it("accepte un niveau absent (null) ou entre 0 et 100", async () => {
     const { skillSchema } = await import("../src/lib/validation/admin.ts");
-    const s = { name: "Meta Ads", category: "Social Media", description: null, sort_order: 0, is_featured: false };
+    const s = { name: "Meta Ads", category_id: "3f2b8a4e-1c2d-4e5f-8a9b-0c1d2e3f4a5b", description: null, sort_order: 0, is_featured: false };
     assert.ok(skillSchema.safeParse({ ...s, level: null }).success);
     assert.ok(skillSchema.safeParse({ ...s, level: 80 }).success);
     assert.equal(skillSchema.safeParse({ ...s, level: 120 }).success, false);
+  });
+});
+
+describe("groupSkillsByDomain", () => {
+  it("trie par ordre, masque les domaines vides et les compétences non classées", async () => {
+    const { groupSkillsByDomain } = await import("../src/lib/skills.ts");
+    const cat = (id: string, sort_order: number) => ({ id, name: id, slug: id, description: null, icon: null, sort_order });
+    const skill = (id: string, category_id: string | null, sort_order: number) => ({
+      id, name: id, category_id, category: null, level: null, description: null, sort_order, is_featured: true,
+    });
+    const domains = groupSkillsByDomain(
+      [cat("B", 2), cat("A", 1), cat("Vide", 3)],
+      [skill("b2", "B", 2), skill("b1", "B", 1), skill("a1", "A", 1), skill("orpheline", null, 1)],
+    );
+    assert.deepEqual(domains.map((d) => [d.category.id, d.skills.map((s) => s.id)]), [["A", ["a1"]], ["B", ["b1", "b2"]]]);
   });
 });

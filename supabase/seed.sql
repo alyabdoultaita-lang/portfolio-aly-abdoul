@@ -1,7 +1,7 @@
 -- ============================================================================
 -- Contenu de départ issu du CV — GÉNÉRÉ par scripts/generate-seed.ts
 -- Ne pas modifier à la main : éditez src/content/cv.ts puis npm run seed:generate
--- À exécuter APRÈS supabase/migrations/0001_schema.sql.
+-- À exécuter APRÈS supabase/migrations/0001_schema.sql et 0002_skill_domains.sql.
 -- Chaque table n'est remplie que si elle est vide (ré-exécution sans doublon).
 -- ============================================================================
 
@@ -41,35 +41,40 @@ do $seed$ begin
   end if;
 end $seed$;
 
--- Compétences (niveaux non renseignés : absents du CV)
+-- Domaines de compétences (également créés par la migration 0002)
+insert into public.skill_categories (name, slug, description, icon, sort_order) values
+  ('Stratégie', 'strategie', 'Définir le cap : positionnement, plan d''action et ligne éditoriale alignés sur les objectifs business.', 'strategy', 1),
+  ('Acquisition', 'acquisition', 'Générer de la visibilité et des leads qualifiés grâce aux campagnes payantes et au référencement.', 'acquisition', 2),
+  ('Data & Tracking', 'data-tracking', 'Mesurer ce qui compte : plan de taggage, suivi des conversions et tableaux de bord.', 'data', 3),
+  ('Web', 'web', 'Concevoir et optimiser des sites performants, bien référencés et pensés pour l''utilisateur.', 'web', 4),
+  ('Management', 'management', 'Piloter les projets, les équipes, les prestataires et les budgets jusqu''aux résultats.', 'management', 5)
+on conflict (slug) do nothing;
+
+-- Compétences, rattachées à leur domaine (si la table est vide)
 do $seed$ begin
   if not exists (select 1 from public.skills) then
-    insert into public.skills (name, category, level, description, sort_order, is_featured) values
-      ('Stratégie de marketing digital', 'Stratégie digitale', null, null, 1, true),
-      ('Benchmark et veille concurrentielle', 'Stratégie digitale', null, null, 2, false),
-      ('Reporting mensuel de performance', 'Digital Marketing', null, null, 3, true),
-      ('Emailing et newsletter (Mailchimp)', 'Digital Marketing', null, null, 4, false),
-      ('Community management', 'Social Media', null, null, 5, true),
-      ('Meta Business Suite', 'Social Media', null, null, 6, false),
-      ('Hootsuite', 'Social Media', null, null, 7, false),
-      ('Meta Ads', 'Social Media', null, null, 8, true),
-      ('LinkedIn Ads', 'Social Media', null, null, 9, false),
-      ('Google Ads', 'Google Ads', null, null, 10, true),
-      ('Google Analytics (GA4)', 'Analytics', null, null, 11, true),
-      ('Google Tag Manager', 'Google Tag Manager', null, null, 12, false),
-      ('Création et gestion de sites WordPress', 'WordPress', null, null, 13, true),
-      ('Elementor', 'WordPress', null, null, 14, false),
-      ('SEO', 'SEO', null, null, 15, false),
-      ('Rédaction web', 'Création de contenu', null, null, 16, true),
-      ('Canva', 'Création de contenu', null, null, 17, false),
-      ('Photoshop', 'Création de contenu', null, null, 18, false),
-      ('Premiere Pro', 'Création de contenu', null, null, 19, false),
-      ('CapCut', 'Création de contenu', null, null, 20, false),
-      ('Photographie', 'Création de contenu', null, null, 21, false),
-      ('Prompt engineering', 'IA générative', null, null, 22, true),
-      ('Gestion de projet et leadership d''équipe', 'Gestion de projet', null, null, 23, true),
-      ('Engagement des parties prenantes', 'Gestion de projet', null, null, 24, false),
-      ('Google Drive et Dropbox', 'Gestion de projet', null, null, 25, false);
+    insert into public.skills (name, category_id, sort_order, is_featured) values
+      ('Stratégie digitale', (select id from public.skill_categories where slug = 'strategie'), 1, true),
+      ('Plan marketing digital', (select id from public.skill_categories where slug = 'strategie'), 2, true),
+      ('Social Media Strategy', (select id from public.skill_categories where slug = 'strategie'), 3, true),
+      ('Content Strategy', (select id from public.skill_categories where slug = 'strategie'), 4, true),
+      ('Meta Ads', (select id from public.skill_categories where slug = 'acquisition'), 1, true),
+      ('Google Ads', (select id from public.skill_categories where slug = 'acquisition'), 2, true),
+      ('LinkedIn Ads', (select id from public.skill_categories where slug = 'acquisition'), 3, true),
+      ('SEO', (select id from public.skill_categories where slug = 'acquisition'), 4, true),
+      ('Google Analytics 4 (GA4)', (select id from public.skill_categories where slug = 'data-tracking'), 1, true),
+      ('Google Tag Manager', (select id from public.skill_categories where slug = 'data-tracking'), 2, true),
+      ('Looker Studio', (select id from public.skill_categories where slug = 'data-tracking'), 3, true),
+      ('Conversion Tracking', (select id from public.skill_categories where slug = 'data-tracking'), 4, true),
+      ('WordPress', (select id from public.skill_categories where slug = 'web'), 1, true),
+      ('Elementor', (select id from public.skill_categories where slug = 'web'), 2, true),
+      ('SEO technique', (select id from public.skill_categories where slug = 'web'), 3, true),
+      ('UX/UI', (select id from public.skill_categories where slug = 'web'), 4, true),
+      ('Gestion de projet', (select id from public.skill_categories where slug = 'management'), 1, true),
+      ('Coordination d''équipe', (select id from public.skill_categories where slug = 'management'), 2, true),
+      ('Gestion de prestataires', (select id from public.skill_categories where slug = 'management'), 3, true),
+      ('Reporting', (select id from public.skill_categories where slug = 'management'), 4, true),
+      ('Budget média', (select id from public.skill_categories where slug = 'management'), 5, true);
   end if;
 end $seed$;
 

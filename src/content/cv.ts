@@ -19,6 +19,7 @@ import type {
   ProjectCategory,
   SiteSettings,
   Skill,
+  SkillCategory,
 } from "@/types/content";
 
 export const cvProfile: Profile = {
@@ -180,45 +181,74 @@ export const cvExperiences: Experience[] = [
   }),
 ];
 
-let skillOrder = 0;
-/** Les niveaux ne figurent pas sur le CV : ils restent vides (null) et non affichés. */
-const skill = (name: string, category: string, is_featured = false): Skill => ({
-  id: `cv-skill-${++skillOrder}`,
-  name,
-  category,
-  level: null,
-  description: null,
-  sort_order: skillOrder,
-  is_featured,
-});
-
-export const cvSkills: Skill[] = [
-  skill("Stratégie de marketing digital", "Stratégie digitale", true),
-  skill("Benchmark et veille concurrentielle", "Stratégie digitale"),
-  skill("Reporting mensuel de performance", "Digital Marketing", true),
-  skill("Emailing et newsletter (Mailchimp)", "Digital Marketing"),
-  skill("Community management", "Social Media", true),
-  skill("Meta Business Suite", "Social Media"),
-  skill("Hootsuite", "Social Media"),
-  skill("Meta Ads", "Social Media", true),
-  skill("LinkedIn Ads", "Social Media"),
-  skill("Google Ads", "Google Ads", true),
-  skill("Google Analytics (GA4)", "Analytics", true),
-  skill("Google Tag Manager", "Google Tag Manager"),
-  skill("Création et gestion de sites WordPress", "WordPress", true),
-  skill("Elementor", "WordPress"),
-  skill("SEO", "SEO"),
-  skill("Rédaction web", "Création de contenu", true),
-  skill("Canva", "Création de contenu"),
-  skill("Photoshop", "Création de contenu"),
-  skill("Premiere Pro", "Création de contenu"),
-  skill("CapCut", "Création de contenu"),
-  skill("Photographie", "Création de contenu"),
-  skill("Prompt engineering", "IA générative", true),
-  skill("Gestion de projet et leadership d'équipe", "Gestion de projet", true),
-  skill("Engagement des parties prenantes", "Gestion de projet"),
-  skill("Google Drive et Dropbox", "Gestion de projet"),
+/**
+ * Compétences organisées en 5 domaines (ordre d'affichage = sort_order).
+ * Même contenu que supabase/migrations/0002_skill_domains.sql.
+ * Aucun niveau en pourcentage : la section met en avant les domaines maîtrisés.
+ */
+export const cvSkillCategories: SkillCategory[] = [
+  {
+    id: "cv-sc-strategie",
+    name: "Stratégie",
+    slug: "strategie",
+    description: "Définir le cap : positionnement, plan d'action et ligne éditoriale alignés sur les objectifs business.",
+    icon: "strategy",
+    sort_order: 1,
+  },
+  {
+    id: "cv-sc-acquisition",
+    name: "Acquisition",
+    slug: "acquisition",
+    description: "Générer de la visibilité et des leads qualifiés grâce aux campagnes payantes et au référencement.",
+    icon: "acquisition",
+    sort_order: 2,
+  },
+  {
+    id: "cv-sc-data-tracking",
+    name: "Data & Tracking",
+    slug: "data-tracking",
+    description: "Mesurer ce qui compte : plan de taggage, suivi des conversions et tableaux de bord.",
+    icon: "data",
+    sort_order: 3,
+  },
+  {
+    id: "cv-sc-web",
+    name: "Web",
+    slug: "web",
+    description: "Concevoir et optimiser des sites performants, bien référencés et pensés pour l'utilisateur.",
+    icon: "web",
+    sort_order: 4,
+  },
+  {
+    id: "cv-sc-management",
+    name: "Management",
+    slug: "management",
+    description: "Piloter les projets, les équipes, les prestataires et les budgets jusqu'aux résultats.",
+    icon: "management",
+    sort_order: 5,
+  },
 ];
+
+const skillsByDomain: Record<string, string[]> = {
+  strategie: ["Stratégie digitale", "Plan marketing digital", "Social Media Strategy", "Content Strategy"],
+  acquisition: ["Meta Ads", "Google Ads", "LinkedIn Ads", "SEO"],
+  "data-tracking": ["Google Analytics 4 (GA4)", "Google Tag Manager", "Looker Studio", "Conversion Tracking"],
+  web: ["WordPress", "Elementor", "SEO technique", "UX/UI"],
+  management: ["Gestion de projet", "Coordination d'équipe", "Gestion de prestataires", "Reporting", "Budget média"],
+};
+
+export const cvSkills: Skill[] = cvSkillCategories.flatMap((cat) =>
+  skillsByDomain[cat.slug].map((name, i) => ({
+    id: `cv-skill-${cat.slug}-${i + 1}`,
+    name,
+    category_id: cat.id,
+    category: null,
+    level: null,
+    description: null,
+    sort_order: i + 1,
+    is_featured: true,
+  })),
+);
 
 const cert = (
   n: number,

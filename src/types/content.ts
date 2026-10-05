@@ -70,10 +70,27 @@ export interface Experience {
   is_visible: boolean;
 }
 
+/** Clés d'icônes disponibles pour les domaines de compétences. */
+export const skillIconKeys = ["strategy", "acquisition", "data", "web", "management"] as const;
+export type SkillIconKey = (typeof skillIconKeys)[number];
+
+/** Domaine de compétences (table skill_categories), ordonné et éditable dans /admin. */
+export interface SkillCategory {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  icon: SkillIconKey | null;
+  sort_order: number;
+}
+
 export interface Skill {
   id: string;
   name: string;
-  category: string;
+  /** Domaine de rattachement ; null = « non classée » (masquée sur le site). */
+  category_id: string | null;
+  /** Ancienne catégorie en texte libre, conservée pour l'historique. */
+  category: string | null;
   /** 0–100, ou null pour ne pas afficher de niveau. */
   level: number | null;
   description: string | null;

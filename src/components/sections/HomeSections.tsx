@@ -1,10 +1,11 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
-import type { Article, Experience, Project, Skill, SiteSettings, Profile } from "@/types/content";
+import type { SkillDomain } from "@/lib/skills";
+import type { Article, Experience, Project, SiteSettings, Profile } from "@/types/content";
 import { ArticleRow } from "@/components/blog/ArticleCard";
 import { ExperienceList } from "@/components/experience/ExperienceList";
 import { ProjectCard } from "@/components/portfolio/ProjectCard";
-import { SkillGroups } from "@/components/skills/SkillGroups";
+import { SkillDomains } from "@/components/skills/SkillDomains";
 import { ButtonLink } from "@/components/ui/Button";
 import { ArrowIcon } from "@/components/ui/Icons";
 import { SectionHeader } from "@/components/ui/SectionHeader";
@@ -66,10 +67,8 @@ export function HomeProjects({ projects }: { projects: Project[] }) {
   );
 }
 
-export function HomeSkills({ skills }: { skills: Skill[] }) {
-  const featured = skills.filter((s) => s.is_featured);
-  const list = featured.length >= 6 ? featured : skills;
-  if (list.length === 0) return null;
+export function HomeSkills({ domains }: { domains: SkillDomain[] }) {
+  if (domains.length === 0) return null;
   return (
     <section className="container-x py-24 sm:py-36" aria-label="Compétences">
       <SectionHeader
@@ -82,7 +81,7 @@ export function HomeSkills({ skills }: { skills: Skill[] }) {
         }
         aside={<MoreLink href="/competences">Toutes les compétences</MoreLink>}
       />
-      <SkillGroups skills={list} showLevels={false} />
+      <SkillDomains domains={domains} />
     </section>
   );
 }

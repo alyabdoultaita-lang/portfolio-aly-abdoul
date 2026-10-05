@@ -58,6 +58,7 @@ que les articles du blog sont des exemples.
 ├── docs/ARCHITECTURE.md          ← ce document
 ├── supabase/
 │   ├── migrations/0001_schema.sql   tables, index, triggers, RLS, storage
+│   ├── migrations/0002_skill_domains.sql  domaines de compétences (skill_categories)
 │   └── seed.sql                     contenu du CV (généré : npm run seed:generate)
 ├── public/demo/                  visuels de démonstration (SVG monochromes)
 └── src/
@@ -115,7 +116,9 @@ experiences(id, company, role, location, start_date, end_date, is_current,
             description, responsibilities text[], achievements text[],
             results text[], tools text[], company_url, logo_url, sort_order)
 
-skills(id, name, category, level 0-100 ou null, description, sort_order, is_featured)
+skill_categories(id, name, slug UNIQUE, description, icon, sort_order)   ← domaines 01–05
+skills(id, name, category_id → skill_categories, category (ancien libellé),
+       level (non affiché), description, sort_order, is_featured)
 
 project_categories(id, name, slug UNIQUE, sort_order)
 projects(id, title, slug UNIQUE, category_id → project_categories,

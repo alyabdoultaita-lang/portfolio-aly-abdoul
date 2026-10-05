@@ -24,18 +24,3 @@ export const mainNav = [
   { href: "/blog", label: "Blog" },
   { href: "/cv", label: "CV" },
 ] as const;
-
-/** Catégories de compétences proposées dans l'admin (ordre d'affichage). */
-export const skillCategories = [
-  "Stratégie digitale",
-  "Digital Marketing",
-  "Social Media",
-  "Google Ads",
-  "Analytics",
-  "Google Tag Manager",
-  "SEO",
-  "WordPress",
-  "Création de contenu",
-  "IA générative",
-  "Gestion de projet",
-] as const;

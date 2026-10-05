@@ -1,12 +1,12 @@
 import type { ReactNode } from "react";
 import type { Metadata } from "next";
-import { groupSkills } from "@/components/skills/SkillGroups";
 import { CredentialList } from "@/components/shared/CredentialList";
 import { PrintButton } from "@/components/shared/PrintButton";
 import { ButtonLink } from "@/components/ui/Button";
 import { DownloadIcon } from "@/components/ui/Icons";
 import { JsonLd } from "@/components/ui/JsonLd";
-import { getCertifications, getExperiences, getProfile, getSkills } from "@/lib/data/public";
+import { getCertifications, getExperiences, getProfile, getSkillCategories, getSkills } from "@/lib/data/public";
+import { groupSkillsByDomain } from "@/lib/skills";
 import { breadcrumbJsonLd, pageMetadata, personJsonLd } from "@/lib/seo";
 import { formatPeriod } from "@/lib/utils";
 
@@ -28,10 +28,11 @@ function CvSection({ title, children }: { title: string; children: ReactNode }) 
 }
 
 export default async function CvPage() {
-  const [profile, experiences, skills, certifications] = await Promise.all([
+  const [profile, experiences, skills, skillCategories, certifications] = await Promise.all([
     getProfile(),
     getExperiences(),
     getSkills(),
+    getSkillCategories(),
     getCertifications(),
   ]);
 
@@ -117,7 +118,7 @@ export default async function CvPage() {
 
           <CvSection title="Compétences">
             <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-2">
-              {groupSkills(skills).map(([category, items]) => {
+              {groupSkillsByDomain(skillCategories, skills).map(({ category: { name: category }, skills: items }) => {
                 // Évite « Google Ads — Google Ads » quand la compétence porte le nom de sa catégorie.
                 const names = items.map((s) => s.name).filter((n) => n.toLowerCase() !== category.toLowerCase());
                 return (
