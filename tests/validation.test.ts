@@ -103,6 +103,17 @@ describe("skillSchema", () => {
 });
 
 describe("groupSkillsByDomain", () => {
+  it("se replie sur l'ancien libellé si la migration 0002 n'est pas faite", async () => {
+    const { groupSkillsByDomain } = await import("../src/lib/skills.ts");
+    const skill = (id: string, category: string, sort_order: number) => ({
+      id, name: id, category_id: null, category, level: null, description: null, sort_order, is_featured: true,
+    });
+    const domains = groupSkillsByDomain([], [skill("b", "Social Media", 2), skill("a", "Social Media", 1), skill("c", "Web", 3)]);
+    assert.deepEqual(
+      domains.map((d) => [d.category.name, d.skills.map((s) => s.id)]),
+      [["Social Media", ["a", "b"]], ["Web", ["c"]]],
+    );
+  });
   it("trie par ordre, masque les domaines vides et les compétences non classées", async () => {
     const { groupSkillsByDomain } = await import("../src/lib/skills.ts");
     const cat = (id: string, sort_order: number) => ({ id, name: id, slug: id, description: null, icon: null, sort_order });
