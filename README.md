@@ -84,6 +84,13 @@ non autorisée au niveau de la base.
 3. Dans Supabase, *Authentication › URL Configuration* : renseignez l'URL du site.
 4. Déployez. Pensez à soumettre `https://votre-domaine.com/sitemap.xml` dans Google Search Console.
 
+## Mise en veille de Supabase (plan gratuit)
+
+Un projet Supabase gratuit est mis en pause après 7 jours sans activité. Une tâche
+planifiée Vercel (`vercel.json`) appelle chaque jour `/api/keepalive`, qui fait une
+petite lecture pour garder la base active. *(Facultatif : définir `CRON_SECRET` sur
+Vercel pour réserver cette route aux tâches planifiées.)*
+
 ## Scripts
 
 | Commande | Rôle |
