@@ -22,7 +22,6 @@ export function SettingsForm({ settings, action }: { settings: SiteSettings; act
         ))}
       </Fieldset>
       <Fieldset legend="Hero">
-        <TextField name="hero_kicker" label="Sur-titre" defaultValue={settings.hero.kicker} />
         <TextArea name="hero_statement" label="Déclaration sous le hero" rows={2} defaultValue={settings.hero.statement} />
       </Fieldset>
       <Fieldset legend="Appel à l'action (bas de page)">

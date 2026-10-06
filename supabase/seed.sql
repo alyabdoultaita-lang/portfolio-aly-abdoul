@@ -25,7 +25,7 @@ end $seed$;
 insert into public.site_settings (key, value) values
   ('stats', '[{"value":"4","suffix":"+","label":"Années d''expérience"},{"value":"4","suffix":"","label":"Sites web intégrés"},{"value":"8","suffix":"","label":"Certifications"},{"value":"14","suffix":"","label":"Outils maîtrisés"}]'::jsonb),
   ('seo', '{"title":"Abdoul Aly TAITA — Responsable Digital & Marketing Digital","description":"Abdoul Aly TAITA, Responsable Digital à Ouagadougou (Burkina Faso) : social media, Meta Ads, Google Ads, LinkedIn Ads, création de contenus et sites web WordPress.","keywords":["Abdoul Aly TAITA","Responsable digital","Marketing digital","Social media manager","Community manager","Ouagadougou","Burkina Faso"]}'::jsonb),
-  ('hero', '{"kicker":"Portfolio — 2026","statement":"Réseaux sociaux, publicité en ligne, contenus et sites web : le digital comme levier de croissance."}'::jsonb),
+  ('hero', '{"kicker":"","statement":"Réseaux sociaux, publicité en ligne, contenus et sites web : le digital comme levier de croissance."}'::jsonb),
   ('contact_cta', '{"title":"Construisons votre présence digitale.","text":"Un poste à pourvoir, une stratégie à repenser, une marque à faire grandir en ligne ? Parlons-en."}'::jsonb)
 on conflict (key) do nothing;
 

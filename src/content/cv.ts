@@ -73,7 +73,7 @@ export const cvSettings: SiteSettings = {
     ],
   },
   hero: {
-    kicker: "Portfolio — 2026",
+    kicker: "",
     statement: "Réseaux sociaux, publicité en ligne, contenus et sites web : le digital comme levier de croissance.",
   },
   contact_cta: {

@@ -26,7 +26,7 @@ export async function saveSettings(_prev: FormState, fd: FormData): Promise<Form
 
   const rows = [
     { key: "stats", value: stats },
-    { key: "hero", value: { kicker: form.str(fd, "hero_kicker"), statement: form.str(fd, "hero_statement") } },
+    { key: "hero", value: { kicker: "", statement: form.str(fd, "hero_statement") } },
     { key: "contact_cta", value: { title: form.str(fd, "cta_title"), text: form.str(fd, "cta_text") } },
     {
       key: "seo",
