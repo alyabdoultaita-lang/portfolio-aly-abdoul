@@ -7,8 +7,8 @@ import { mainNav, siteConfig } from "@/config/site";
 import { cn, pad } from "@/lib/utils";
 
 /**
- * En-tête fixe en `mix-blend-difference` : il reste lisible sur les sections
- * claires comme sombres. Sur mobile, menu plein écran à grande typographie.
+ * En-tête fixe : en haut de page, `mix-blend-difference` (lisible sur les
+ * sections claires comme sombres) ; dès qu'on défile, bande noire et texte blanc. Sur mobile, menu plein écran à grande typographie.
  */
 /** Liens du header, dans l'ordre affiché sur desktop et dans le menu mobile. */
 const headerNav = [{ href: "/", label: "Accueil" }, ...mainNav, { href: "/contact", label: "Contact" }];
@@ -66,8 +66,10 @@ export function Header() {
 
       <header
         className={cn(
-          "fixed inset-x-0 top-0 z-50 text-white mix-blend-difference transition-[padding] duration-500",
-          scrolled ? "py-3" : "py-5 sm:py-6",
+          "fixed inset-x-0 top-0 z-50 text-white transition-[padding,background-color] duration-500",
+          // Haut de page : mix-blend-difference (lisible sur fond clair comme sombre) ;
+          // après défilement : bande noire opaque, texte blanc.
+          scrolled && !open ? "bg-ink py-3 shadow-[0_1px_0_0_var(--color-ash)]" : "py-5 mix-blend-difference sm:py-6",
         )}
       >
         <div className="container-x flex items-center justify-between gap-6">
@@ -180,7 +182,7 @@ export function Header() {
         </nav>
         <div className="container-x flex justify-between border-t border-ash py-6 text-[0.7rem] font-medium uppercase tracking-[0.14em] text-smoke">
           <span>Burkina Faso</span>
-          <span>{siteConfig.coordinates}</span>
+          <span>{siteConfig.name}</span>
         </div>
       </div>
     </>

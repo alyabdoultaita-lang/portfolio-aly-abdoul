@@ -1,5 +1,4 @@
 import { delay } from "@/lib/utils";
-import { siteConfig } from "@/config/site";
 import type { Profile, SiteSettings } from "@/types/content";
 import { ButtonLink } from "@/components/ui/Button";
 import { DownloadIcon } from "@/components/ui/Icons";
@@ -19,9 +18,7 @@ export function Hero({ profile, settings }: { profile: Profile; settings: SiteSe
       <div className="container-x">
         {/* Barre de méta-données */}
         <div className="eyebrow fade-up flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-b border-ink pb-4 text-stone">
-          <span className="text-ink">{settings.hero.kicker}</span>
-          <span className="hidden sm:inline">{profile.location}</span>
-          <span>{siteConfig.coordinates}</span>
+          <span className="text-ink">{profile.location}</span>
           {profile.available_for_work && (
             <span className="flex items-center gap-2 text-ink">
               <span className="relative flex size-2">
