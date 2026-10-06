@@ -64,7 +64,8 @@ export default async function AboutPage() {
                   alt={`Portrait de ${profile.full_name}`}
                   fill
                   priority
-                  sizes="(min-width: 1024px) 40vw, 100vw"
+                  quality={92}
+                  sizes="(min-width: 1536px) 680px, (min-width: 1024px) 44vw, 100vw"
                   className="img-tone object-cover object-[50%_25%]"
                 />
               )}

@@ -1,13 +1,13 @@
 /**
  * Redimensionne une photo dans le navigateur avant son envoi :
- * - côté le plus long limité à `maxSize` px (2000 par défaut, largement
+ * - côté le plus long limité à `maxSize` px (2400 par défaut, largement
  *   suffisant pour un écran Retina) ;
  * - conversion en WebP (ou JPEG si le navigateur ne sait pas encoder le WebP) ;
  * - orientation EXIF des photos de téléphone respectée.
  * Les SVG, GIF (animations) et fichiers non-image sont renvoyés tels quels,
  * de même que les images déjà petites ou que la conversion n'allègerait pas.
  */
-export async function resizeImage(file: File, maxSize = 2000, quality = 0.85): Promise<File> {
+export async function resizeImage(file: File, maxSize = 2400, quality = 0.92): Promise<File> {
   if (!["image/jpeg", "image/png", "image/webp", "image/avif"].includes(file.type)) return file;
 
   let bitmap: ImageBitmap;

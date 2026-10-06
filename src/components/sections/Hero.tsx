@@ -91,7 +91,8 @@ export function Hero({ profile, settings }: { profile: Profile; settings: SiteSe
                   alt={`Portrait de ${profile.full_name}`}
                   fill
                   priority
-                  sizes="(min-width: 1024px) 33vw, 100vw"
+                  quality={92}
+                  sizes="(min-width: 1536px) 560px, (min-width: 1024px) 36vw, 100vw"
                   className="img-tone object-cover object-[50%_25%]"
                 />
               )}
