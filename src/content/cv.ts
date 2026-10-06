@@ -37,7 +37,7 @@ export const cvProfile: Profile = {
     "En parallèle, j'ai été l'intégrateur principal de plusieurs sites web : site d'entreprise, site vitrine industriel, restaurant et hôtel.",
   ].join("\n\n"),
   location: "Ouagadougou, Burkina Faso",
-  email: "alytaita77@gmail.com",
+  email: "alyabdoultaita@gmail.com",
   phone: "+226 55 28 75 49",
   photo_url: "/demo/portrait.svg",
   cv_url: null,

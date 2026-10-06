@@ -17,7 +17,7 @@ Je me suis ensuite spécialisé en marketing digital et community management, av
 
 De décembre 2023 à janvier 2026, en tant que Social Media Manager chez Factory Business Solutions, j''ai géré l''ensemble des plateformes digitales de Conso''Mag, de l''ANAC BF et d''IRH Afrique : contenus graphiques et rédactionnels, stratégie et publicité, rapports mensuels et création de sites web.
 
-En parallèle, j''ai été l''intégrateur principal de plusieurs sites web : site d''entreprise, site vitrine industriel, restaurant et hôtel.', 'Ouagadougou, Burkina Faso', 'alytaita77@gmail.com', '+226 55 28 75 49', '/demo/portrait.svg', null, 'https://www.linkedin.com/in/alyabdoultaita/', null, null, null, true, array['Français (très bien)', 'Mooré (langue maternelle)', 'Anglais (intermédiaire)']::text[], array['Musique', 'Technologie', 'Lecture']::text[], true);
+En parallèle, j''ai été l''intégrateur principal de plusieurs sites web : site d''entreprise, site vitrine industriel, restaurant et hôtel.', 'Ouagadougou, Burkina Faso', 'alyabdoultaita@gmail.com', '+226 55 28 75 49', '/demo/portrait.svg', null, 'https://www.linkedin.com/in/alyabdoultaita/', null, null, null, true, array['Français (très bien)', 'Mooré (langue maternelle)', 'Anglais (intermédiaire)']::text[], array['Musique', 'Technologie', 'Lecture']::text[], true);
   end if;
 end $seed$;
 
