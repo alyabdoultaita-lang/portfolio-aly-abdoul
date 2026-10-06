@@ -10,7 +10,7 @@ const MAX_SIZE = 10 * 1024 * 1024;
 
 /**
  * Envoie un fichier dans le bucket « media » et renvoie son URL publique.
- * Les photos sont d'abord redimensionnées (2000 px max, WebP) : envoi plus
+ * Les photos sont d'abord redimensionnées (2400 px max, WebP) : envoi plus
  * rapide et pages plus légères, même depuis un téléphone.
  */
 export async function uploadMedia(original: File, folder: string) {
@@ -47,6 +47,8 @@ export function MediaField({
   const [url, setUrl] = useState(defaultValue ?? "");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [dims, setDims] = useState<{ url: string; w: number; h: number } | null>(null);
+  const size = dims?.url === url ? dims : null;
   const fieldError = useFieldError(name);
   const inputId = useId();
 
@@ -71,7 +73,12 @@ export function MediaField({
           <div className="relative aspect-[16/9] w-full overflow-hidden border border-line bg-mist">
             {url ? (
               // eslint-disable-next-line @next/next/no-img-element -- aperçu admin d'une URL arbitraire
-              <img src={url} alt="" className="size-full object-cover" />
+              <img
+                src={url}
+                alt=""
+                className="size-full object-cover"
+                onLoad={(e) => setDims({ url, w: e.currentTarget.naturalWidth, h: e.currentTarget.naturalHeight })}
+              />
             ) : (
               <span className="eyebrow absolute inset-0 flex items-center justify-center text-stone">Aucune image</span>
             )}
@@ -106,6 +113,16 @@ export function MediaField({
               </>
             )}
           </div>
+          {kind === "image" && size && size.w > 0 && (
+            <p className="text-xs text-stone">
+              Taille : {size.w} × {size.h} px
+              {Math.max(size.w, size.h) < 1200 && (
+                <strong className="ml-1 font-semibold text-ink">
+                  — image trop petite, elle paraîtra floue sur le site. Envoyez l&apos;original (1200 px minimum, idéalement 2000 px).
+                </strong>
+              )}
+            </p>
+          )}
           {(error || fieldError) && <p className="text-xs font-semibold">↳ {error ?? fieldError}</p>}
         </div>
       </div>
