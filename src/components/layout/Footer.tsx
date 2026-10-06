@@ -68,7 +68,7 @@ export function Footer({ profile }: { profile: Profile }) {
         <span>
           © {new Date().getFullYear()} {siteConfig.name}
         </span>
-        <span>{siteConfig.coordinates} — Burkina Faso</span>
+        <span>{profile.location || "Ouagadougou, Burkina Faso"}</span>
       </div>
     </footer>
   );
