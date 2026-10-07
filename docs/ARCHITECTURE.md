@@ -59,6 +59,7 @@ que les articles du blog sont des exemples.
 ├── supabase/
 │   ├── migrations/0001_schema.sql   tables, index, triggers, RLS, storage
 │   ├── migrations/0002_skill_domains.sql  domaines de compétences (skill_categories)
+│   ├── migrations/0003_analytics.sql      statistiques de visite (analytics_events)
 │   └── seed.sql                     contenu du CV (généré : npm run seed:generate)
 ├── public/demo/                  visuels de démonstration (SVG monochromes)
 └── src/
@@ -138,6 +139,9 @@ certifications(id, kind formation|certification, name, issuer, issue_date, expir
                credential_id, credential_url, sort_order)
 
 messages(id, name, email, subject, message, is_read, created_at)
+
+analytics_events(id, type, path, referrer, target, device, country,
+                 visitor (empreinte anonyme du jour), created_at)   ← insertion publique, lecture admin
 ```
 
 - **Statut « programmé »** : `status = 'published'` et `published_at` dans le futur.

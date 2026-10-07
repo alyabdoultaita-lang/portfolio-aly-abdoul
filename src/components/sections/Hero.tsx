@@ -68,7 +68,7 @@ export function Hero({ profile, settings }: { profile: Profile; settings: SiteSe
               <ButtonLink href="/portfolio" arrow>
                 Voir mon portfolio
               </ButtonLink>
-              <ButtonLink href={profile.cv_url ?? "/cv"} variant="outline">
+              <ButtonLink href={profile.cv_url ?? "/cv"} variant="outline" data-track={profile.cv_url ? "cv_download" : undefined}>
                 <span className="flex items-center gap-3">
                   Télécharger mon CV <DownloadIcon className="size-4" />
                 </span>

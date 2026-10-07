@@ -2,6 +2,7 @@ import { DemoBanner } from "@/components/layout/DemoBanner";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { RevealObserver } from "@/components/ui/RevealObserver";
+import { Tracker } from "@/components/analytics/Tracker";
 import { getProfile } from "@/lib/data/public";
 
 export default async function SiteLayout({ children }: LayoutProps<"/">) {
@@ -15,6 +16,7 @@ export default async function SiteLayout({ children }: LayoutProps<"/">) {
       <Footer profile={profile} />
       <DemoBanner />
       <RevealObserver />
+      <Tracker />
     </>
   );
 }
