@@ -1,5 +1,7 @@
 "use server";
 
+import { headers } from "next/headers";
+import { recordEvent } from "@/lib/analytics-server";
 import { getPublicClient } from "@/lib/supabase/public";
 import { contactSchema, type FormState } from "@/lib/validation/contact";
 
@@ -47,5 +49,6 @@ export async function sendMessage(_prev: FormState, formData: FormData): Promise
     return { status: "error", message: "Une erreur est survenue. Réessayez ou écrivez-moi directement par e-mail." };
   }
 
+  await recordEvent(await headers(), { type: "contact_message", path: "/contact" });
   return { status: "success", message: "Merci ! Votre message a bien été envoyé. Je vous réponds rapidement." };
 }

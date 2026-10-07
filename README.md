@@ -30,6 +30,8 @@ Ouvrez <http://localhost:3000>. Sans configuration Supabase, le site affiche le 
    Exécutez ensuite `supabase/migrations/0002_skill_domains.sql` (les 5 domaines de compétences,
    modifiables dans /admin › Compétences). **Base déjà en ligne :** exécutez uniquement ce fichier ;
    il ne supprime rien (les anciennes compétences restent « non classées », masquées sur le site).
+   Exécutez enfin `supabase/migrations/0003_analytics.sql` : statistiques de visite dans
+   /admin › Statistiques (pages vues, visiteurs, téléchargements du CV, messages, clics). Mesure sans cookie.
 3. Exécutez `supabase/seed.sql` : il remplit la base avec le contenu du CV (profil, expériences,
    compétences, formations, certifications, projets web). Chaque table n'est remplie que si elle est vide.
    Ce fichier est généré depuis `src/content/cv.ts` par `npm run seed:generate`. Aucun article fictif n'est inséré.

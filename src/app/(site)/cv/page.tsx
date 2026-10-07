@@ -50,7 +50,7 @@ export default async function CvPage() {
           </p>
           <div className="flex flex-col gap-3 sm:flex-row">
             {profile.cv_url ? (
-              <ButtonLink href={profile.cv_url}>
+              <ButtonLink href={profile.cv_url} data-track="cv_download">
                 <span className="flex items-center gap-3">
                   Télécharger le CV (PDF) <DownloadIcon className="size-4" />
                 </span>

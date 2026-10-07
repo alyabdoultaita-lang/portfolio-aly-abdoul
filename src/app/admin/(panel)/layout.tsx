@@ -1,3 +1,4 @@
+import { NoTrack } from "@/components/analytics/Tracker";
 import { SetupNotice } from "@/components/admin/SetupNotice";
 import { Sidebar } from "@/components/admin/Sidebar";
 import { requireAdmin } from "@/lib/auth";
@@ -22,6 +23,7 @@ export default async function PanelLayout({ children }: LayoutProps<"/admin">) {
 
   return (
     <div className="lg:pl-64">
+      <NoTrack />
       <Sidebar email={user.email ?? ""} unread={unread} />
       <main className="mx-auto max-w-6xl px-4 py-8 sm:px-8 sm:py-12">{children}</main>
     </div>

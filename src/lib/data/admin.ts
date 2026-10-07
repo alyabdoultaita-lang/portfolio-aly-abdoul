@@ -1,4 +1,5 @@
 import "server-only";
+import { summarize, type AnalyticsEvent, type EventType } from "@/lib/analytics";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type {
   Article,
@@ -155,4 +156,63 @@ export async function getAdminSettings() {
   const supabase = await db();
   const { data } = await supabase.from("site_settings").select("key,value");
   return Object.fromEntries((data ?? []).map((r) => [r.key, r.value])) as Record<string, unknown>;
+}
+
+// ---------------------------------------------------------------------------
+// Statistiques
+// ---------------------------------------------------------------------------
+
+const ANALYTICS_COLUMNS = "type,path,referrer,target,device,country,visitor,created_at";
+const ANALYTICS_MAX_ROWS = 50_000;
+
+/**
+ * Événements des `days` derniers jours, agrégés, + totaux de la période
+ * précédente (même durée) pour la comparaison. `ready: false` si la
+ * migration 0003 n'a pas été exécutée.
+ */
+export async function getAnalytics(days: number) {
+  const supabase = await db();
+  const to = new Date();
+  const from = new Date(to);
+  from.setUTCHours(0, 0, 0, 0);
+  from.setUTCDate(from.getUTCDate() - (days - 1));
+  const prevFrom = new Date(from);
+  prevFrom.setUTCDate(prevFrom.getUTCDate() - days);
+
+  const events: AnalyticsEvent[] = [];
+  const page = 1000; // limite de lignes par requête de l'API Supabase
+  for (let offset = 0; offset < ANALYTICS_MAX_ROWS; offset += page) {
+    const { data, error } = await supabase
+      .from("analytics_events")
+      .select(ANALYTICS_COLUMNS)
+      .gte("created_at", from.toISOString())
+      .order("created_at", { ascending: true })
+      .order("id", { ascending: true })
+      .range(offset, offset + page - 1);
+    if (error) return { ready: false as const };
+    events.push(...(data as AnalyticsEvent[]));
+    if (!data || data.length < page) break;
+  }
+
+  const previousCount = async (type: EventType) => {
+    const { count } = await supabase
+      .from("analytics_events")
+      .select("id", { count: "exact", head: true })
+      .eq("type", type)
+      .gte("created_at", prevFrom.toISOString())
+      .lt("created_at", from.toISOString());
+    return count ?? 0;
+  };
+  const [views, cv, contact] = await Promise.all([
+    previousCount("pageview"),
+    previousCount("cv_download"),
+    previousCount("contact_message"),
+  ]);
+
+  return {
+    ready: true as const,
+    summary: summarize(events, from, to),
+    previous: { pageview: views, cv_download: cv, contact_message: contact } as Partial<Record<EventType, number>>,
+    truncated: events.length >= ANALYTICS_MAX_ROWS,
+  };
 }
