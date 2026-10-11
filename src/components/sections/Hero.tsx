@@ -22,8 +22,8 @@ export function Hero({ profile, settings }: { profile: Profile; settings: SiteSe
           {profile.available_for_work && (
             <span className="flex items-center gap-2 text-ink">
               <span className="relative flex size-2">
-                <span className="absolute inline-flex size-full animate-ping rounded-full bg-forest opacity-50 motion-reduce:animate-none" />
-                <span className="relative inline-flex size-2 rounded-full bg-forest" />
+                <span className="absolute inline-flex size-full animate-ping rounded-full bg-ink opacity-50 motion-reduce:animate-none" />
+                <span className="relative inline-flex size-2 rounded-full bg-ink" />
               </span>
               Disponible
             </span>
@@ -32,7 +32,7 @@ export function Hero({ profile, settings }: { profile: Profile; settings: SiteSe
 
         <div className="grid gap-8 pt-8 lg:grid-cols-12 lg:gap-10 lg:pt-12">
           {/* Nom */}
-          <div className="lg:col-span-7">
+          <div className="lg:col-span-8">
             <h1 id="hero-title" className="display-xl uppercase">
               <span className="line-mask">
                 <span style={delay(100)}>{first}</span>
@@ -80,8 +80,8 @@ export function Hero({ profile, settings }: { profile: Profile; settings: SiteSe
           </div>
 
           {/* Portrait */}
-          <figure className="relative mx-auto w-full max-w-xl lg:col-span-5 lg:max-w-none">
-            <div className="unveil group relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-mist [--unveil-radius:2rem] ring-1 ring-forest/20 shadow-[0_30px_60px_-25px_rgb(6_40_30/0.5)]" style={delay(250)}>
+          <figure className="relative lg:col-span-4">
+            <div className="unveil group relative aspect-[4/5] overflow-hidden bg-mist" style={delay(250)}>
               {profile.photo_url && (
                 <SmartImage
                   src={profile.photo_url}
@@ -89,11 +89,11 @@ export function Hero({ profile, settings }: { profile: Profile; settings: SiteSe
                   fill
                   priority
                   quality={92}
-                  sizes="(min-width: 1536px) 720px, (min-width: 1024px) 45vw, (min-width: 640px) 576px, 100vw"
+                  sizes="(min-width: 1536px) 560px, (min-width: 1024px) 36vw, 100vw"
                   className="img-tone object-cover object-[50%_25%]"
                 />
               )}
-              <span className="eyebrow absolute left-4 top-4 rounded-full bg-paper px-3 py-1 text-forest">Portrait</span>
+              <span className="eyebrow absolute left-3 top-3 bg-paper px-2 py-1 text-ink">Portrait</span>
             </div>
             <figcaption className="eyebrow mt-3 flex justify-between text-stone">
               <span>{profile.full_name}</span>

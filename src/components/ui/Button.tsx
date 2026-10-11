@@ -6,7 +6,7 @@ import { ArrowIcon } from "./Icons";
 type Variant = "solid" | "outline" | "ghost" | "inverse";
 
 const variants: Record<Variant, string> = {
-  solid: "bg-forest text-paper border-forest hover:bg-ink hover:border-ink",
+  solid: "bg-ink text-paper border-ink hover:bg-paper hover:text-ink",
   outline: "bg-transparent text-ink border-ink hover:bg-ink hover:text-paper",
   ghost: "bg-transparent text-ink border-transparent hover:border-ink",
   inverse: "bg-paper text-ink border-paper hover:bg-transparent hover:text-paper",

@@ -34,7 +34,7 @@ export default async function SkillsPage() {
         intro={`${count} compétences réparties en ${domains.length} domaines, de la stratégie à l'exécution.`}
       />
 
-      <section aria-label="Domaines" className="border-y border-forest bg-forest py-6 text-paper [--marquee-stroke:var(--color-paper)]">
+      <section aria-label="Domaines" className="border-y border-ink bg-ink py-6 text-paper">
         <Marquee items={domains.map((d) => d.category.name)} className="text-3xl font-semibold uppercase tracking-tighter sm:text-5xl" />
       </section>
 
