@@ -1,18 +1,19 @@
 @import "tailwindcss";
 
 /* ==========================================================================
-   Design tokens — identité « éditorial monochrome »
+   Design tokens — palette « Forest Code / Mint Fog »
    ========================================================================== */
 
 @theme {
-  --color-ink: #0a0a0a;
-  --color-graphite: #1c1c1b;
-  --color-ash: #2e2e2c;
-  --color-stone: #6b6b67; /* texte secondaire sur fond clair (contraste ≥ 4.5:1) */
-  --color-smoke: #a3a39e; /* texte secondaire sur fond sombre */
-  --color-line: #dcdcd7;
-  --color-mist: #ededea;
-  --color-paper: #fafaf8;
+  --color-ink: #06281e; /* vert forêt très profond : texte principal (15:1 sur Mint Fog) */
+  --color-graphite: #0b3a2c;
+  --color-ash: #145240;
+  --color-forest: #075e46; /* Forest Code : couleur d'accent (7.4:1 sur Mint Fog) */
+  --color-stone: #3f6357; /* texte secondaire sur fond clair (contraste ≥ 4.5:1) */
+  --color-smoke: #a6d4c0; /* texte secondaire sur fond sombre */
+  --color-line: #bce2cf;
+  --color-mist: #d2f4e2;
+  --color-paper: #e8fff2; /* Mint Fog */
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-instrument-serif), ui-serif, Georgia, serif;
@@ -25,6 +26,7 @@
   --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
 
   --animate-marquee: marquee 40s linear infinite;
+  --animate-marquee-reverse: marquee 48s linear infinite reverse;
 }
 
 @layer base {
@@ -40,7 +42,7 @@
   }
 
   ::selection {
-    @apply bg-ink text-paper;
+    @apply bg-forest text-paper;
   }
 
   :focus-visible {
@@ -140,10 +142,10 @@
 
 @keyframes unveil {
   from {
-    clip-path: inset(100% 0 0 0);
+    clip-path: inset(100% 0 0 0 round var(--unveil-radius, 0));
   }
   to {
-    clip-path: inset(0 0 0 0);
+    clip-path: inset(0 0 0 0 round var(--unveil-radius, 0));
   }
 }
 
@@ -366,4 +368,16 @@
   float: left;
   height: 0;
   pointer-events: none;
+}
+
+/* Mots en contour dans les bandeaux défilants (couleur via --marquee-stroke) */
+.marquee-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--marquee-stroke, var(--color-ink));
+}
+@media (forced-colors: active) {
+  .marquee-outline {
+    color: CanvasText;
+    -webkit-text-stroke: 0;
+  }
 }

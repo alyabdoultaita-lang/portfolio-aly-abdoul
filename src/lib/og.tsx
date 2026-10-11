@@ -15,8 +15,8 @@ export function renderOgImage({ eyebrow, title, footer }: { eyebrow: string; tit
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          background: "#0a0a0a",
-          color: "#fafaf8",
+          background: "#06281e",
+          color: "#e8fff2",
           padding: 64,
           fontFamily: "sans-serif",
         }}
